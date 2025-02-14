@@ -1,23 +1,16 @@
 const express = require("express");
 const cors = require("cors");
-const pool = require("./config/db");
+const db = require("./config/db"); // Import the database configuration
 
 const app = express();
-app.use(cors()); // Permitir acceso desde el frontend
+app.use(cors()); // Enable CORS
 app.use(express.json());
 
-// Ruta de prueba para verificar conexión entre backend y frontend
-app.get("/api/test", async (req, res) => {
-    try {
-        const result = await pool.query("SELECT NOW()");
-        res.json({ message: "Conexión exitosa con PostgreSQL", time: result.rows[0] });
-    } catch (error) {
-        res.status(500).json({ error: "Error en la conexión a PostgreSQL" });
-    }
+app.get("/api/test", (req, res) => {
+    res.json({ message: "Backend connection successful", time: { now: new Date().toISOString() } });
 });
 
-// Iniciar servidor en el puerto 5000
-const PORT = 5000;
+const PORT = process.env.PORT || 5001; // Change the port to 5001
 app.listen(PORT, () => {
-    console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
+    console.log(`✅ Server running at http://localhost:${PORT}`);
 });

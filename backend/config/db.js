@@ -1,5 +1,5 @@
 const { Pool } = require("pg");
-require("dotenv").config(); // Cargar variables de entorno
+require("dotenv").config(); // Load environment variables
 
 const pool = new Pool({
     user: process.env.DB_USER,
@@ -10,7 +10,10 @@ const pool = new Pool({
 });
 
 pool.connect()
-    .then(() => console.log("✅ Conectado a PostgreSQL"))
-    .catch(err => console.error("❌ Error conectando a PostgreSQL", err));
+    .then(() => console.log("✅ Connected to PostgreSQL"))
+    .catch(err => {
+        console.error("❌ Error connecting to PostgreSQL", err);
+        process.exit(1); // Exit the process with failure
+    });
 
 module.exports = pool;
