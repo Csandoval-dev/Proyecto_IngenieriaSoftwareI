@@ -4,10 +4,10 @@ Este es un proyecto de citas desarrollado con React en el frontend y Node.js con
 
 ### Integrantes
 
-Abraham Bladimir Argeñal Avelar - 61851025
-Carlos Leonel Sandoval Cerrato – 62111743
-Cristian Jose Castellanos Menjivar - 62011112
-Marcio Moran Velasquez – 62111580
+- Braham Bladimir Argeñal Avelar - 61851025
+- Carlos Leonel Sandoval Cerrato – 62111743
+- Cristian Jose Castellanos Menjivar - 62011112
+- Marcio Moran Velasquez – 62111580
 
 ## Descripción
 
