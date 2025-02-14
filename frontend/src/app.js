@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { testBackendConnection } from "../services/index";
+import { testBackendConnection } from "./index";
 
 function App() {
     const [message, setMessage] = useState("Connecting...");
@@ -22,4 +22,4 @@ function App() {
     );
 }
 
-export default App;
+export default app;

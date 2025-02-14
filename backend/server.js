@@ -10,7 +10,7 @@ app.get("/api/test", (req, res) => {
     res.json({ message: "Backend connection successful", time: { now: new Date().toISOString() } });
 });
 
-const PORT = process.env.PORT || 5001; // Change the port to 5001
+const PORT = process.env.PORT || 5002; // Change the port to 5002
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);
 });
