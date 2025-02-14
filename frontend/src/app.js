@@ -22,4 +22,4 @@ function App() {
     );
 }
 
-export default app;
+export default App;  // Correct the export statement
