@@ -1,21 +1,23 @@
-const http = require("http");
-const authRoutes = require("./routes/authRoutes");
+const express = require("express");
+const cors = require("cors");
+const pool = require("./config/db");
 
-const server = http.createServer((req, res) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Methods", "POST, GET");
-  res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+const app = express();
+app.use(cors()); // Permitir acceso desde el frontend
+app.use(express.json());
 
-  if (req.method === "OPTIONS") {
-    res.writeHead(200);
-    res.end();
-    return;
-  }
-
-  authRoutes(req, res);
+// Ruta de prueba para verificar conexión entre backend y frontend
+app.get("/api/test", async (req, res) => {
+    try {
+        const result = await pool.query("SELECT NOW()");
+        res.json({ message: "Conexión exitosa con PostgreSQL", time: result.rows[0] });
+    } catch (error) {
+        res.status(500).json({ error: "Error en la conexión a PostgreSQL" });
+    }
 });
 
+// Iniciar servidor en el puerto 5000
 const PORT = 5000;
-server.listen(PORT, () => {
-  console.log(`Servidor corriendo en http://localhost:${PORT}`);
+app.listen(PORT, () => {
+    console.log(`🚀 Servidor backend corriendo en http://localhost:${PORT}`);
 });
