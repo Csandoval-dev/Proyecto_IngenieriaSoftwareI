@@ -1,25 +1,24 @@
-import React, { useEffect, useState } from "react";
-import { testBackendConnection } from "./index";
+import React from 'react';
+import { BrowserRouter as Router, Route, Routes, Navigate } from 'react-router-dom';
+import LoginPage from './pages/login';
+import HomePage from './pages/Home';
+import RegisterPage from './pages/Register';
+
+const PrivateRoute = ({ element: Component, ...rest }) => {
+  const isAuthenticated = !!localStorage.getItem('token');
+  return isAuthenticated ? <Component {...rest} /> : <Navigate to="/login" />;
+};
 
 function App() {
-    const [message, setMessage] = useState("Connecting...");
-
-    useEffect(() => {
-        testBackendConnection().then((data) => {
-            if (data.error) {
-                setMessage("❌ Error connecting to the backend");
-            } else {
-                setMessage(`✅ ${data.message} - Server time: ${data.time.now}`);
-            }
-        });
-    }, []);
-
-    return (
-        <div>
-            <h1>Backend Connection Test</h1>
-            <p>{message}</p>
-        </div>
-    );
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/" element={<PrivateRoute element={HomePage} />} />
+      </Routes>
+    </Router>
+  );
 }
 
-export default App;  // Correct the export statement
+export default App;
