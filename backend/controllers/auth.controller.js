@@ -1,23 +1,23 @@
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findUserByEmail, createUser } = require('../models/user.model');
+const { findUserByUsername, findUserByEmail, createUser } = require('../models/user.model');
 require('dotenv').config(); // Cargar variables de entorno
 
 // Controlador para el Login
 const login = async (req, res) => {
-    const { email, contraseña } = req.body;
+    const { username, contrasena } = req.body;
 
     try {
         // Verificar si el usuario existe
-        const usuario = await findUserByEmail(email);
+        const usuario = await findUserByUsername(username);
 
         if (!usuario) {
             return res.status(404).json({ message: 'Usuario no encontrado' });
         }
 
         // Verificar la contraseña
-        const contraseñaCoincide = await bcrypt.compare(contraseña, usuario.contraseña);
-        if (!contraseñaCoincide) {
+        const contrasenaCoincide = await bcrypt.compare(contrasena, usuario.contrasena);
+        if (!contrasenaCoincide) {
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
 
@@ -37,7 +37,7 @@ const login = async (req, res) => {
 
 // Controlador para el Registro
 const register = async (req, res) => {
-    const { nombre, email, contraseña, id_rol } = req.body;
+    const { nombre, email, contrasena, id_rol } = req.body;
 
     try {
         // Verificar si el email ya está registrado
@@ -48,10 +48,10 @@ const register = async (req, res) => {
 
         // Encriptar contraseña
         const salt = await bcrypt.genSalt(10); // Generar un salt
-        const contraseñaEncriptada = await bcrypt.hash(contraseña, salt); // Encriptar la contraseña
+        const contrasenaEncriptada = await bcrypt.hash(contrasena, salt); // Encriptar la contraseña
 
         // Insertar nuevo usuario con la contraseña encriptada
-        await createUser(nombre, email, contraseñaEncriptada, id_rol);
+        await createUser(nombre, email, contrasenaEncriptada, id_rol);
 
         res.status(201).json({ message: 'Usuario registrado exitosamente' });
     } catch (error) {

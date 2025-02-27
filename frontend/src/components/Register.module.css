@@ -1,0 +1,312 @@
+.container {
+    display: flex;
+    min-height: 100vh;
+    background: #f0f2f5;
+    overflow: hidden;
+}
+
+.imageContainer {
+    flex: 1;
+    position: relative;
+    display: none;
+}
+
+.image {
+    width: 100%;
+    height: 100vh;
+    object-fit: cover;
+    object-position: center;
+}
+
+.overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.4);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 2rem;
+    color: white;
+    text-align: center;
+}
+
+.welcomeTitle {
+    font-size: 3rem;
+    margin-bottom: 1rem;
+    font-weight: 700;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.welcomeText {
+    font-size: 1.5rem;
+    max-width: 80%;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
+}
+
+.formContainer {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 1rem;
+}
+
+.form {
+    background: #fff;
+    padding: 2.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    max-width: 400px;
+    width: 100%;
+    text-align: center;
+    transition: transform 0.3s ease;
+}
+
+.form:hover {
+    transform: translateY(-5px);
+}
+
+.stepsIndicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 1.5rem;
+}
+
+.step {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 600;
+    font-size: 0.9rem;
+    background: #f0f0f0;
+    color: #777;
+    border: 2px solid #e0e0e0;
+}
+
+.activeStep {
+    background: #4caf50;
+    color: white;
+    border-color: #4caf50;
+}
+
+.completedStep {
+    background: #b7e1b8;
+    color: white;
+    border-color: #4caf50;
+}
+
+.stepConnector {
+    flex: 1;
+    height: 2px;
+    background: #e0e0e0;
+    margin: 0 10px;
+    max-width: 60px;
+}
+
+.stepHeader {
+    display: flex;
+    align-items: center;
+    margin-bottom: 0.5rem;
+    position: relative;
+}
+
+.backButton {
+    position: absolute;
+    left: 0;
+    background: none;
+    border: none;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    color: #777;
+    font-size: 0.9rem;
+    cursor: pointer;
+    padding: 0;
+}
+
+.title {
+    font-size: 2rem;
+    margin-bottom: 0.5rem;
+    color: #333;
+    width: 100%;
+}
+
+.subtitle {
+    color: #777;
+    margin-bottom: 2rem;
+}
+
+.inputGroup {
+    position: relative;
+    margin-bottom: 1.2rem;
+}
+
+.inputIcon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #aaa;
+}
+
+.input {
+    width: 100%;
+    padding: 1rem 1rem 1rem 2.5rem;
+    border: 1px solid #e1e1e1;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: all 0.3s;
+    background-color: #f9f9f9;
+}
+
+.input:focus {
+    border-color: #4caf50;
+    background-color: #fff;
+    box-shadow: 0 0 0 2px rgba(76, 175, 80, 0.2);
+    outline: none;
+}
+
+.inputError {
+    border-color: #f44336;
+}
+
+.errorText {
+    color: #f44336;
+    font-size: 0.8rem;
+    text-align: left;
+    margin-top: 0.3rem;
+    padding-left: 0.5rem;
+}
+
+.visibilityToggle {
+    position: absolute;
+    right: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: none;
+    border: none;
+    color: #aaa;
+    cursor: pointer;
+}
+
+.passwordStrength {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.passwordStrength div {
+    height: 4px;
+    border-radius: 2px;
+    margin-bottom: 0.3rem;
+    transition: all 0.3s;
+}
+
+.weak {
+    width: 30%;
+    background: #f44336;
+}
+
+.medium {
+    width: 60%;
+    background: #ff9800;
+}
+
+.strong {
+    width: 100%;
+    background: #4caf50;
+}
+
+.strengthText {
+    color: #777;
+    font-size: 0.8rem;
+}
+
+.button {
+    width: 100%;
+    padding: 1rem;
+    background: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-weight: 600;
+    font-size: 1rem;
+}
+
+.button:hover {
+    background: #43a047;
+    box-shadow: 0 4px 12px rgba(67, 160, 71, 0.3);
+}
+
+.button:disabled {
+    background: #b8d8b9;
+    cursor: not-allowed;
+}
+
+.loginText {
+    margin-top: 1.5rem;
+    color: #777;
+}
+
+.loginButton {
+    background: transparent;
+    color: #4caf50;
+    border: none;
+    cursor: pointer;
+    text-decoration: underline;
+    font-weight: 500;
+}
+
+.loginButton:hover {
+    color: #43a047;
+}
+
+/* Responsive design */
+@media (min-width: 768px) {
+    .imageContainer {
+        display: block;
+    }
+    
+    .form {
+        border-radius: 12px;
+    }
+}
+
+@media (max-width: 767px) {
+    .container {
+        flex-direction: column;
+    }
+    
+    .formContainer {
+        padding: 1rem;
+    }
+}
+
+/* Animaciones */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes slideInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+@keyframes slideInLeft {
+    from { opacity: 0; transform: translateX(-30px); }
+    to { opacity: 1; transform: translateX(0); }
+}
+
+.form {
+    animation: fadeIn 0.5s ease;
+}

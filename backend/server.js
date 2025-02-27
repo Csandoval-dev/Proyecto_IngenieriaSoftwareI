@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const authRoutes = require('.Routes/auth.routes');
+const authRoutes = require('./routes/auth.routes'); // Asegúrate de que la ruta sea correcta
 const db = require("./config/db"); // Import the database configuration
 require('dotenv').config(); // Cargar variables de entorno
 
