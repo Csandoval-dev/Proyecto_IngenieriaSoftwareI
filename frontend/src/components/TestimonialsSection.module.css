@@ -1,0 +1,73 @@
+/* src/components/TestimonialsSection.module.css */
+.testimonials {
+    padding: 4rem 2rem;
+    background-color: #fff;
+    text-align: center;
+  }
+  
+  .testimonials h2 {
+    font-size: 2rem;
+    color: #1565c0;
+    margin-bottom: 3rem;
+  }
+  
+  .testimonialsContainer {
+    display: flex;
+    gap: 2rem;
+    max-width: 1200px;
+    margin: 0 auto;
+    justify-content: center;
+  }
+  
+  .testimonialCard {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 2rem;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.05);
+    flex: 1;
+    max-width: 350px;
+    transition: transform 0.3s;
+    position: relative;
+  }
+  
+  .testimonialCard:hover {
+    transform: translateY(-10px);
+  }
+  
+  .avatar {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin: 0 auto 1.5rem;
+    border: 3px solid #1e88e5;
+  }
+  
+  .testimonialText {
+    color: #555;
+    font-style: italic;
+    margin-bottom: 1.5rem;
+    line-height: 1.6;
+  }
+  
+  .testimonialCard h4 {
+    color: #1e88e5;
+    margin-bottom: 0.5rem;
+  }
+  
+  .patientInfo {
+    color: #777;
+    font-size: 0.9rem;
+  }
+  
+  @media (max-width: 900px) {
+    .testimonialsContainer {
+      flex-direction: column;
+      align-items: center;
+    }
+    
+    .testimonialCard {
+      max-width: 100%;
+      width: 100%;
+    }
+  }
