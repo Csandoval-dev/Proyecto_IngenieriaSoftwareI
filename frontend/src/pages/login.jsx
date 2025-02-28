@@ -45,9 +45,9 @@ const Login = () => {
         setIsLoading(true);
         
         try {
-            const res = await axios.post('/api/auth/login', {
+            const res = await axios.post('http://localhost:5002/api/auth/login', {
                 username: formData.username,
-                password: formData.password
+                contrasena: formData.password
             });
 
             if (res.data && res.data.token) {

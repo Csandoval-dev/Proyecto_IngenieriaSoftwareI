@@ -1,7 +1,7 @@
 // src/components/Footer.jsx
 import React from 'react';
-import styles from '/Footer.module.css';
-import logo from '../Assets/login.jpg';
+import styles from './Footer.module.css';
+import logo from '../Assets/Doctor2.jpg';
 
 function Footer() {
   return (

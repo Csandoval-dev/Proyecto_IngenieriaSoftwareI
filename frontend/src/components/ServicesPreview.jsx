@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from "./ServicesPreview.module.css";
-import consultaIcon from '../Assets/login.jpg';
-import laboratorioIcon from '../Assets/login.jpg';
-import especialidadesIcon from '../Assets/login.jpg';
+import consultaIcon from '../Assets/Doctor4.jpg';
+import laboratorioIcon from '../Assets/Doctor5.jpg';
+import especialidadesIcon from '../Assets/Doctor6.jpg';
 
 function ServicesPreview() {
   const navigate = useNavigate();

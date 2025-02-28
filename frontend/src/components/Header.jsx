@@ -2,7 +2,7 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from '../Assets/login.jpg';
+import logo from '../Assets/Doctor1.jpg';
 
 function Header() {
   const navigate = useNavigate();

@@ -1,10 +1,10 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from './components/Home.module.css';
+import styles from './Home.module.css';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ServicesPreview from '../components/ServicesPreview';
-import TestimonialsSection from '../components/TestimonialsSection';
+
 import Footer from '../components/Footer';
 
 function HomePage() {
@@ -25,7 +25,6 @@ function HomePage() {
       <Header />
       <HeroSection onButtonClick={handleServiceClick} />
       <ServicesPreview onServiceClick={handleServiceClick} />
-      <TestimonialsSection />
       <Footer />
     </div>
   );
