@@ -20,7 +20,7 @@ function HeroSection({ onButtonClick }) {
       <div className={styles.heroContent}>
         <h2>Cuidando tu salud con excelencia</h2>
         <p>
-          En MediSalud, nos dedicamos a brindarte la mejor atención médica con profesionales altamente calificados y tecnología de vanguardia. Tu bienestar es nuestra prioridad.
+          En HealthConnect, nos dedicamos a brindarte la mejor atención médica con profesionales altamente calificados y tecnología de vanguardia. Tu bienestar es nuestra prioridad.
         </p>
         <div className={styles.cta}>
           <button className={styles.primaryBtn} onClick={handleAgendarCita}>

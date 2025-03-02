@@ -23,7 +23,7 @@ function Header() {
       <div className={styles.logo}>
         <Link to="/">
           <img src={logo} alt="Clínica Logo" />
-          <h1>MediSalud</h1>
+          <h1>HealthConnect</h1>
         </Link>
       </div>
       
