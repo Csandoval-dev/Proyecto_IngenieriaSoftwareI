@@ -1,6 +1,6 @@
 const express = require("express");
 const cors = require("cors");
-const authRoutes = require('./routes/auth.routes'); // Asegúrate de que la ruta sea correcta
+const authRoutes = require('./routes/auth.routes'); 
 const db = require("./config/db"); // Import the database configuration
 require('dotenv').config(); // Cargar variables de entorno
 
@@ -8,9 +8,17 @@ const app = express();
 app.use(cors()); // Enable CORS
 app.use(express.json());
 
-app.use('/api/auth', authRoutes); // Use authentication routes
+const clinicRoutes = require('./routes/clinic.routes');
+app.use('/api', clinicRoutes);
 
-const PORT = process.env.PORT || 5002; // Change the port to 5002
+app.use('/api/auth', authRoutes); // Usa authentication routes
+
+const adminRoutes = require('./routes/admin.routes');
+app.use('/api/admin', adminRoutes);
+
+
+const PORT = process.env.PORT || 5002; // Puerto
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);
+    
 });

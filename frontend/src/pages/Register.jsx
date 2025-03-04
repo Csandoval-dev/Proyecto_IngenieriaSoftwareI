@@ -87,15 +87,15 @@ const Register = () => {
             await axios.post('http://localhost:5002/api/auth/register', {
                 nombre: formData.name,
                 email: formData.email,
-                contraseña: formData.password,
-                id_rol: 1
+                contrasena: formData.password, // Cambiar 'contraseña' a 'contrasena'
+                id_rol: 3 // Asignar el rol de paciente por defecto
             });
             
             // Mostrar mensaje de éxito
             alert('¡Registro exitoso! Ahora puedes iniciar sesión');
-            navigate('/login');
+            navigate('/servicios-clinicos'); // Redirigir a la página de servicios clínicos
         } catch (err) {
-            const errorMessage = err.response?.data?.mensaje || 'Error al registrar usuario';
+            const errorMessage = err.response?.data?.message || 'Error al registrar usuario'; // Cambiar 'mensaje' a 'message'
             alert(errorMessage);
         } finally {
             setIsLoading(false);

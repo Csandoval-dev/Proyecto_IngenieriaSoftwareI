@@ -26,7 +26,7 @@ const Login = () => {
 
     const navigate = useNavigate();
     const location = useLocation();
-    const from = location.state?.from || '/servicios-clinicos'; // Ruta de redirección
+    const from = location.state?.from || '/servicios-clinicos'; // Ruta de redirección por defecto
 
     useEffect(() => {
         setAppear(true);
@@ -52,8 +52,15 @@ const Login = () => {
 
             if (res.data && res.data.token) {
                 localStorage.setItem('token', res.data.token);
+                localStorage.setItem('userRole', res.data.user.role);
                 setAppear(false);
-                setTimeout(() => navigate(from), 300);
+                setTimeout(() => {
+                    if (res.data.user.role === 1) { // Asegúrate de que el rol sea un número
+                        navigate('/admin-dashboard');
+                    } else {
+                        navigate(from);
+                    }
+                }, 300);
             } else {
                 alert('Credenciales inválidas');
             }

@@ -19,6 +19,6 @@ const createUser = async (nombre, email, contrasenaEncriptada, id_rol) => {
 
 module.exports = {
     findUserByUsername,
-    findUserByEmail, // Se agregó la función para buscar por email
+    findUserByEmail,
     createUser
 };
