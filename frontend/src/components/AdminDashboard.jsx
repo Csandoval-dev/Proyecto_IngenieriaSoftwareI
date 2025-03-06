@@ -1,11 +1,19 @@
 import { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom'; // Asumiendo que usas react-router
 
 const AdminDashboard = () => {
     const [clinics, setClinics] = useState([]);
     const [clinicAdmins, setClinicAdmins] = useState([]);
     const [pendingClinics, setPendingClinics] = useState([]);
+    const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [activeTab, setActiveTab] = useState('clinics');
+    const [rejectReason, setRejectReason] = useState('');
+    const [clinicToReject, setClinicToReject] = useState(null);
+    const [showRejectModal, setShowRejectModal] = useState(false);
+    
+    const navigate = useNavigate();
 
     const fetchData = async () => {
         setLoading(true);
@@ -33,6 +41,14 @@ const AdminDashboard = () => {
             if (!pendingResponse.ok) throw new Error('Error fetching pending clinics');
             const pendingData = await pendingResponse.json();
             setPendingClinics(Array.isArray(pendingData) ? pendingData : []);
+            
+            // Fetch all users with roles
+            const usersResponse = await fetch('http://localhost:5002/api/admin/users', {
+                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
+            });
+            if (!usersResponse.ok) throw new Error('Error fetching users');
+            const usersData = await usersResponse.json();
+            setUsers(Array.isArray(usersData) ? usersData : []);
             
             setError(null);
         } catch (err) {
@@ -71,85 +87,248 @@ const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div>Cargando datos...</div>;
-    if (error) return <div>Error: {error}</div>;
+    const showRejectForm = (clinic) => {
+        setClinicToReject(clinic);
+        setRejectReason('');
+        setShowRejectModal(true);
+    };
+
+    const cancelReject = () => {
+        setClinicToReject(null);
+        setRejectReason('');
+        setShowRejectModal(false);
+    };
+
+    const confirmReject = async () => {
+        if (!clinicToReject) return;
+        
+        try {
+            const response = await fetch(`http://localhost:5002/api/admin/reject-clinic/${clinicToReject.id_clinica}`, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json',
+                    Authorization: `Bearer ${localStorage.getItem('token')}`
+                },
+                body: JSON.stringify({ reason: rejectReason })
+            });
+            
+            if (response.ok) {
+                // Recargar todos los datos para tener la información actualizada
+                await fetchData();
+                alert('Clínica rechazada correctamente');
+            } else {
+                const errorData = await response.json();
+                throw new Error(errorData.message || 'Error al rechazar clínica');
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            alert(error.message);
+        } finally {
+            setShowRejectModal(false);
+            setClinicToReject(null);
+            setRejectReason('');
+        }
+    };
+
+    if (loading) return <div className="loading">Cargando datos...</div>;
+    if (error) return <div className="error">Error: {error}</div>;
 
     return (
-        <div>
+        <div className="admin-dashboard">
             <h1>Dashboard del Administrador General</h1>
             
-            <h2>Clínicas Registradas ({clinics.length})</h2>
-            {clinics.length > 0 ? (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Estado</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clinics.map((clinic) => (
-                            <tr key={clinic.id_clinica}>
-                                <td>{clinic.nombre}</td>
-                                <td>{clinic.tipo}</td>
-                                <td>{clinic.estado || 'N/A'}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No hay clínicas registradas</p>
+            <div className="tabs">
+                <button 
+                    className={activeTab === 'clinics' ? 'active' : ''} 
+                    onClick={() => setActiveTab('clinics')}
+                >
+                    Clínicas
+                </button>
+                <button 
+                    className={activeTab === 'pending' ? 'active' : ''} 
+                    onClick={() => setActiveTab('pending')}
+                >
+                    Pendientes ({pendingClinics.length})
+                </button>
+                <button 
+                    className={activeTab === 'admins' ? 'active' : ''} 
+                    onClick={() => setActiveTab('admins')}
+                >
+                    Administradores
+                </button>
+                <button 
+                    className={activeTab === 'users' ? 'active' : ''} 
+                    onClick={() => setActiveTab('users')}
+                >
+                    Usuarios
+                </button>
+            </div>
+            
+            {/* Contenido de la pestaña de clínicas registradas */}
+            {activeTab === 'clinics' && (
+                <div className="tab-content">
+                    <h2>Clínicas Registradas ({clinics.filter(c => c.estado === 'activa').length})</h2>
+                    {clinics.filter(c => c.estado === 'activa').length > 0 ? (
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {clinics.filter(c => c.estado === 'activa').map((clinic) => (
+                                    <tr key={clinic.id_clinica}>
+                                        <td>{clinic.nombre}</td>
+                                        <td>{clinic.tipo}</td>
+                                        <td>{clinic.direccion}</td>
+                                        <td>{clinic.telefono}</td>
+                                        <td>{clinic.email || 'N/A'}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No hay clínicas registradas con estado activo</p>
+                    )}
+                </div>
             )}
-
-            <h2>Administradores de Clínicas ({clinicAdmins.length})</h2>
-            {clinicAdmins.length > 0 ? (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Email</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {clinicAdmins.map((admin) => (
-                            <tr key={admin.id_usuario}>
-                                <td>{admin.nombre}</td>
-                                <td>{admin.email}</td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No hay administradores de clínicas</p>
+            
+            {/* Contenido de la pestaña de clínicas pendientes */}
+            {activeTab === 'pending' && (
+                <div className="tab-content">
+                    <h2>Clínicas Pendientes de Aprobación ({pendingClinics.length})</h2>
+                    {pendingClinics.length > 0 ? (
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>Nombre</th>
+                                    <th>Tipo</th>
+                                    <th>Dirección</th>
+                                    <th>Teléfono</th>
+                                    <th>Email</th>
+                                    <th>Acciones</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {pendingClinics.map((clinic) => (
+                                    <tr key={clinic.id_clinica}>
+                                        <td>{clinic.nombre}</td>
+                                        <td>{clinic.tipo}</td>
+                                        <td>{clinic.direccion}</td>
+                                        <td>{clinic.telefono}</td>
+                                        <td>{clinic.email || 'N/A'}</td>
+                                        <td className="actions">
+                                            <button 
+                                                className="approve-btn"
+                                                onClick={() => approveClinic(clinic.id_clinica)}
+                                            >
+                                                Aprobar
+                                            </button>
+                                            <button 
+                                                className="reject-btn"
+                                                onClick={() => showRejectForm(clinic)}
+                                            >
+                                                Rechazar
+                                            </button>
+                                        </td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No hay clínicas pendientes de aprobación</p>
+                    )}
+                </div>
             )}
-
-            <h2>Clínicas Pendientes de Aprobación ({pendingClinics.length})</h2>
-            {pendingClinics.length > 0 ? (
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Nombre</th>
-                            <th>Tipo</th>
-                            <th>Dirección</th>
-                            <th>Acciones</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {pendingClinics.map((clinic) => (
-                            <tr key={clinic.id_clinica}>
-                                <td>{clinic.nombre}</td>
-                                <td>{clinic.tipo}</td>
-                                <td>{clinic.direccion}</td>
-                                <td>
-                                    <button onClick={() => approveClinic(clinic.id_clinica)}>Aprobar</button>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </table>
-            ) : (
-                <p>No hay clínicas pendientes de aprobación</p>
+            
+            {/* Contenido de la pestaña de administradores */}
+            {activeTab === 'admins' && (
+                <div className="tab-content">
+                    <h2>Administradores de Clínicas ({clinicAdmins.length})</h2>
+                    {clinicAdmins.length > 0 ? (
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {clinicAdmins.map((admin) => (
+                                    <tr key={admin.id_usuario}>
+                                        <td>{admin.id_usuario}</td>
+                                        <td>{admin.nombre}</td>
+                                        <td>{admin.email}</td>
+                                        <td>{admin.rol}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No hay administradores de clínicas</p>
+                    )}
+                </div>
+            )}
+            
+            {/* Contenido de la pestaña de usuarios */}
+            {activeTab === 'users' && (
+                <div className="tab-content">
+                    <h2>Todos los Usuarios ({users.length})</h2>
+                    {users.length > 0 ? (
+                        <table className="data-table">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Nombre</th>
+                                    <th>Email</th>
+                                    <th>Rol</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {users.map((user) => (
+                                    <tr key={user.id_usuario}>
+                                        <td>{user.id_usuario}</td>
+                                        <td>{user.nombre}</td>
+                                        <td>{user.email}</td>
+                                        <td>{user.rol}</td>
+                                    </tr>
+                                ))}
+                            </tbody>
+                        </table>
+                    ) : (
+                        <p>No hay usuarios registrados</p>
+                    )}
+                </div>
+            )}
+            
+            {/* Modal para rechazar clínica */}
+            {showRejectModal && (
+                <div className="modal-overlay">
+                    <div className="modal">
+                        <h2>Rechazar Clínica</h2>
+                        <p>Está a punto de rechazar la solicitud de la clínica <strong>{clinicToReject?.nombre}</strong>.</p>
+                        <div className="form-group">
+                            <label htmlFor="rejectReason">Razón del rechazo:</label>
+                            <textarea 
+                                id="rejectReason"
+                                value={rejectReason}
+                                onChange={(e) => setRejectReason(e.target.value)}
+                                placeholder="Indique la razón por la que se rechaza esta solicitud"
+                                rows="4"
+                            ></textarea>
+                        </div>
+                        <div className="modal-actions">
+                            <button className="cancel-btn" onClick={cancelReject}>Cancelar</button>
+                            <button className="confirm-btn" onClick={confirmReject}>Confirmar Rechazo</button>
+                        </div>
+                    </div>
+                </div>
             )}
         </div>
     );

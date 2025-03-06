@@ -1,6 +1,6 @@
+const { findUserByUsername, findUserByEmail, createUser } = require('../models/user.model'); // Import the function
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
-const { findUserByUsername, findUserByEmail, createUser } = require('../models/user.model');
 require('dotenv').config(); // Cargar variables de entorno
 
 // Controlador para el Login

@@ -1,3 +1,5 @@
+// clinic.model.js
+
 const db = require('../config/db');
 
 const createClinic = async (nombre, tipo, direccion, telefono, email) => {
@@ -21,4 +23,10 @@ const updateClinicEmail = async (id_clinica, email) => {
     return result.rows[0];
 };
 
-module.exports = { createClinic, getClinicById, updateClinicEmail };
+const updateClinicStatus = async (id_clinica, status) => {
+    const result = await db.query(
+        'UPDATE clinica SET estado = $1 WHERE id_clinica = $2 RETURNING *',
+        [status, id_clinica]
+    );
+    return result.rows[0];
+};
