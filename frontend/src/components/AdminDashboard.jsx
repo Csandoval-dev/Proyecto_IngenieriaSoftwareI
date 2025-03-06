@@ -11,6 +11,7 @@ const AdminDashboard = () => {
                 headers: { Authorization: localStorage.getItem('token') }
             });
             const data = await response.json();
+            console.log('Clinics:', data); // Verificar la respuesta
             setClinics(data);
         };
 
@@ -19,6 +20,7 @@ const AdminDashboard = () => {
                 headers: { Authorization: localStorage.getItem('token') }
             });
             const data = await response.json();
+            console.log('Clinic Admins:', data); // Verificar la respuesta
             setClinicAdmins(data);
         };
 
@@ -27,6 +29,7 @@ const AdminDashboard = () => {
                 headers: { Authorization: localStorage.getItem('token') }
             });
             const data = await response.json();
+            console.log('Pending Clinics:', data); // Verificar la respuesta
             setPendingClinics(data);
         };
 
@@ -37,7 +40,7 @@ const AdminDashboard = () => {
 
     const approveClinic = async (id_clinica) => {
         try {
-            const response = await fetch(`http://localhost:5002/api/clinics/approve/${id_clinica}`, {
+            const response = await fetch(`http://localhost:5002/api/admin/approve-clinic/${id_clinica}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',

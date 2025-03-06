@@ -10,7 +10,6 @@ exports.registerClinic = async (req, res) => {
         const nuevaClinica = await createClinic(nombre, tipo, direccion, telefono, email);
         
         // Crear una suscripción pendiente
-        // Para clínicas privadas y públicas
         await createSubscription(nuevaClinica.id_clinica, 'pendiente');
         
         res.status(201).json({ 

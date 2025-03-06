@@ -18,4 +18,28 @@ const getAllClinicAdmins = async (req, res) => {
     }
 };
 
-module.exports = { getAllClinics, getAllClinicAdmins };
+const getPendingClinics = async (req, res) => {
+    try {
+        const result = await db.query('SELECT * FROM clinica WHERE estado = $1', ['pendiente']);
+        res.json(result.rows);
+    } catch (error) {
+        res.status(500).json({ message: 'Error obteniendo las clínicas pendientes' });
+    }
+};
+
+const approveClinic = async (req, res) => {
+    const { id_clinica } = req.params;
+    try {
+        // Actualizar el estado de la clínica a 'activa'
+        await db.query('UPDATE clinica SET estado = $1 WHERE id_clinica = $2', ['activa', id_clinica]);
+        
+        // Actualizar el estado de la suscripción a 'activa'
+        await db.query('UPDATE suscripcion SET estado = $1 WHERE id_clinica = $2', ['activa', id_clinica]);
+        
+        res.json({ message: 'Clínica aprobada correctamente' });
+    } catch (error) {
+        res.status(500).json({ message: 'Error aprobando la clínica' });
+    }
+};
+
+module.exports = { getAllClinics, getAllClinicAdmins, getPendingClinics, approveClinic };

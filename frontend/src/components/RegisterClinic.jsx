@@ -7,7 +7,8 @@ const RegisterClinic = () => {
     nombre: '',
     tipo: 'publica',
     direccion: '',
-    telefono: ''
+    telefono: '',
+    email: '' // Agregar el campo email
   });
   const [isLoading, setIsLoading] = useState(false);
   const [message, setMessage] = useState('');
@@ -32,7 +33,8 @@ const RegisterClinic = () => {
         nombre: '',
         tipo: 'publica',
         direccion: '',
-        telefono: ''
+        telefono: '',
+        email: '' // Resetear el campo email
       });
     } catch (error) {
       setMessage(error.response?.data?.message || 'Error al registrar la clínica');
@@ -87,6 +89,17 @@ const RegisterClinic = () => {
             id="telefono"
             name="telefono"
             value={formData.telefono}
+            onChange={handleChange}
+            required
+          />
+        </div>
+        <div className={styles.inputGroup}>
+          <label htmlFor="email">Email</label>
+          <input
+            type="email"
+            id="email"
+            name="email"
+            value={formData.email}
             onChange={handleChange}
             required
           />
