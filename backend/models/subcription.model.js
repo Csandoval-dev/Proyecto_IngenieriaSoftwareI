@@ -16,7 +16,16 @@ const updateSubscriptionState = async (id_clinica, estado) => {
     return result.rows[0];
 };
 
+const getSubscriptionByClinicId = async (id_clinica) => {
+    const result = await db.query(
+        'SELECT * FROM suscripcion WHERE id_clinica = $1',
+        [id_clinica]
+    );
+    return result.rows[0];
+};
+
 module.exports = {
     createSubscription,
-    updateSubscriptionState
+    updateSubscriptionState,
+    getSubscriptionByClinicId
 };
