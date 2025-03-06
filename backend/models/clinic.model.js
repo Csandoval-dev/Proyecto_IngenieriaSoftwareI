@@ -9,10 +9,7 @@ const createClinic = async (nombre, tipo, direccion, telefono, email) => {
 };
 
 const getClinicById = async (id_clinica) => {
-    const result = await db.query(
-        'SELECT * FROM clinica WHERE id_clinica = $1',
-        [id_clinica]
-    );
+    const result = await db.query('SELECT * FROM clinica WHERE id_clinica = $1', [id_clinica]);
     return result.rows[0];
 };
 
@@ -24,8 +21,4 @@ const updateClinicEmail = async (id_clinica, email) => {
     return result.rows[0];
 };
 
-module.exports = {
-    createClinic,
-    getClinicById,
-    updateClinicEmail
-};
+module.exports = { createClinic, getClinicById, updateClinicEmail };
