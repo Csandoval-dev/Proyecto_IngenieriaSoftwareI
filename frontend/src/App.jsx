@@ -5,6 +5,8 @@ import HomePage from './pages/Home';
 import RegisterPage from './pages/Register';
 import ServiciosClinicosPage from './components/ServicesPreview';
 import AdminDashboard from './components/AdminDashboard';
+import RegisterClinic from './components/RegisterClinic';
+import Header from './components/Header';
 
 const PrivateRoute = ({ component: Component, requiredRole, ...rest }) => {
   const isAuthenticated = !!localStorage.getItem('token');
@@ -21,14 +23,31 @@ const PrivateRoute = ({ component: Component, requiredRole, ...rest }) => {
   return <Component {...rest} />;
 };
 
+const PublicRoute = ({ component: Component, restricted, ...rest }) => {
+  const isAuthenticated = !!localStorage.getItem('token');
+  const userRole = localStorage.getItem('userRole');
+
+  if (isAuthenticated && restricted) {
+    if (userRole === '1') {
+      return <Navigate to="/admin-dashboard" />;
+    } else {
+      return <Navigate to="/servicios-clinicos" />;
+    }
+  }
+
+  return <Component {...rest} />;
+};
+
 function App() {
   return (
     <Router>
+      <Header />
       <Routes>
         {/* Rutas públicas */}
         <Route path="/" element={<HomePage />} />
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<PublicRoute component={LoginPage} restricted />} />
+        <Route path="/register" element={<PublicRoute component={RegisterPage} restricted />} />
+        <Route path="/register-clinic" element={<PublicRoute component={RegisterClinic} restricted />} />
         
         {/* Rutas privadas que requieren autenticación */}
         <Route path="/servicios-clinicos" element={<PrivateRoute component={ServiciosClinicosPage} />} />

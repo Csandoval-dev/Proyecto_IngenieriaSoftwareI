@@ -1,4 +1,3 @@
-// src/components/Header.jsx
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
@@ -30,7 +29,7 @@ function Header() {
       <nav className={styles.navigation}>
         <ul>
           <li><Link to="/">Inicio</Link></li>
-          <li><Link to={isAuthenticated ? "/servicios" : "/login"}>Servicios</Link></li>
+          <li><Link to="/register-clinic">Registrar Clínica</Link></li>
           <li><Link to="/nosotros">Nosotros</Link></li>
           <li><Link to="/contacto">Contacto</Link></li>
         </ul>

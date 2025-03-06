@@ -37,13 +37,12 @@ const AdminDashboard = () => {
 
     const approveClinic = async (id_clinica) => {
         try {
-            const response = await fetch(`http://localhost:5002/api/admin/approve-clinic/${id_clinica}`, {
+            const response = await fetch(`http://localhost:5002/api/clinics/approve/${id_clinica}`, {
                 method: 'PUT',
                 headers: {
                     'Content-Type': 'application/json',
                     Authorization: localStorage.getItem('token')
-                },
-                body: JSON.stringify({ estado_pago: 'completado' })
+                }
             });
             
             if (response.ok) {
@@ -63,7 +62,7 @@ const AdminDashboard = () => {
             <h2>Clínicas Registradas</h2>
             <ul>
                 {clinics.map((clinic) => (
-                    <li key={clinic.id}>{clinic.nombre}</li>
+                    <li key={clinic.id_clinica}>{clinic.nombre}</li>
                 ))}
             </ul>
 
@@ -78,7 +77,7 @@ const AdminDashboard = () => {
             <ul>
                 {pendingClinics.map((clinic) => (
                     <li key={clinic.id_clinica}>
-                        {clinic.nombre} ({clinic.estado_suscripcion})
+                        {clinic.nombre} ({clinic.estado})
                         <button onClick={() => approveClinic(clinic.id_clinica)}>Aprobar</button>
                     </li>
                 ))}

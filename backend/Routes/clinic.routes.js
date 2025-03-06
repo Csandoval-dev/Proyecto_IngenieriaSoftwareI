@@ -1,10 +1,8 @@
-// routes/clinic.routes.js
 const express = require('express');
-const { fetchClinics, fetchClinicAdmins } = require('../controllers/clinic.controller');
-
 const router = express.Router();
+const clinicController = require('../controllers/clinic.controller');
 
-router.get('/clinics', fetchClinics);
-router.get('/clinic-admins', fetchClinicAdmins);
+router.post('/register', clinicController.registerClinic);
+router.put('/approve/:id_clinica', clinicController.approveClinic);
 
 module.exports = router;

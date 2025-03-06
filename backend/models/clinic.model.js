@@ -1,17 +1,22 @@
-// models/clinic.model.js
 const db = require('../config/db');
 
-const getAllClinics = async () => {
-    const result = await db.query('SELECT * FROM clinica');
-    return result.rows;
+const createClinic = async (nombre, tipo, direccion, telefono, estado) => {
+    const result = await db.query(
+        'INSERT INTO clinica (nombre, tipo, direccion, telefono, estado) VALUES ($1, $2, $3, $4, $5) RETURNING *',
+        [nombre, tipo, direccion, telefono, estado]
+    );
+    return result.rows[0];
 };
 
-const getAllClinicAdmins = async () => {
-    const result = await db.query('SELECT * FROM usuario WHERE id_rol = 2');
-    return result.rows;
+const updateClinicState = async (id_clinica, estado) => {
+    const result = await db.query(
+        'UPDATE clinica SET estado = $1 WHERE id_clinica = $2 RETURNING *',
+        [estado, id_clinica]
+    );
+    return result.rows[0];
 };
 
 module.exports = {
-    getAllClinics,
-    getAllClinicAdmins
+    createClinic,
+    updateClinicState
 };

@@ -1,26 +1,37 @@
-// controllers/clinic.controller.js
-const { getAllClinics, getAllClinicAdmins } = require('../models/clinic.model');
+const { createClinic, updateClinicState } = require('../models/clinic.model');
+const { createSubscription, updateSubscriptionState } = require('../models/subscription.model');
 
-const fetchClinics = async (req, res) => {
+exports.registerClinic = async (req, res) => {
     try {
-        const clinics = await getAllClinics();
-        res.json(clinics);
+        const { nombre, tipo, direccion, telefono } = req.body;
+        const estado = tipo === 'privada' ? 'pendiente' : 'aprobada';
+        
+        const nuevaClinica = await createClinic(nombre, tipo, direccion, telefono, estado);
+        
+        if (tipo === 'privada') {
+            await createSubscription(nuevaClinica.id_clinica, 'pendiente');
+        }
+        
+        res.status(201).json({ message: 'Clínica registrada exitosamente', clinica: nuevaClinica });
     } catch (error) {
-        console.error('Error fetching clinics:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({ message: 'Error al registrar clínica', error: error.message });
     }
 };
 
-const fetchClinicAdmins = async (req, res) => {
+exports.approveClinic = async (req, res) => {
     try {
-        const admins = await getAllClinicAdmins();
-        res.json(admins);
+        const { id_clinica } = req.params;
+        
+        const clinica = await updateClinicState(id_clinica, 'aprobada');
+        
+        if (!clinica) {
+            return res.status(404).json({ message: 'Clínica no encontrada' });
+        }
+        
+        await updateSubscriptionState(id_clinica, 'activa');
+        
+        res.json({ message: 'Clínica aprobada correctamente' });
     } catch (error) {
-        console.error('Error fetching clinic admins:', error);
-        res.status(500).json({ message: 'Error interno del servidor' });
+        res.status(500).json({ message: 'Error al aprobar clínica', error: error.message });
     }
-};
-module.exports = {
-    fetchClinics,
-    fetchClinicAdmins
 };
