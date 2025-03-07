@@ -4,7 +4,7 @@ import styles from './Home.module.css';
 import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ServicesPreview from '../components/ServicesPreview';
-
+import CarouselComponent from '../components/Carousel'; 
 import Footer from '../components/Footer';
 
 function HomePage() {
@@ -25,6 +25,7 @@ function HomePage() {
       <Header />
       <HeroSection onButtonClick={handleServiceClick} />
       <ServicesPreview onServiceClick={handleServiceClick} />
+      <CarouselComponent />
       <Footer />
     </div>
   );

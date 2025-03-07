@@ -1,116 +1,151 @@
-
 .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 1rem 2rem;
-    background-color: #ffffff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    position: sticky;
-    top: 0;
-    z-index: 100;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem 2rem;
+  background-color: #f8f9fa;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+  width: 100%;
+}
+
+.logo {
+  display: flex;
+  align-items: center;
+}
+
+.logo h1 {
+  font-size: 1.5rem;
+  color: #007bff;
+  margin: 0;
+}
+
+.navigation ul {
+  display: flex;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.navigation li {
+  margin: 0 15px;
+}
+
+.navigation a {
+  text-decoration: none;
+  color: #343a40;
+  font-weight: 500;
+  transition: color 0.3s;
+}
+
+.navigation a:hover {
+  color: #007bff;
+}
+
+.buttons {
+  display: flex;
+  gap: 10px;
+}
+
+.serviceBtn {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.serviceBtn:hover {
+  background-color: #0056b3;
+}
+
+.loginBtn {
+  background-color: transparent;
+  color: #007bff;
+  border: 1px solid #007bff;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: all 0.3s;
+}
+
+.loginBtn:hover {
+  background-color: rgba(0, 123, 255, 0.1);
+}
+
+.registerBtn {
+  background-color: #28a745;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.registerBtn:hover {
+  background-color: #218838;
+}
+
+.logoutBtn {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: 500;
+  transition: background-color 0.3s;
+}
+
+.logoutBtn:hover {
+  background-color: #c82333;
+}
+
+@media (max-width: 768px) {
+  .header {
+    flex-direction: column;
+    padding: 1rem;
   }
-  
+
   .logo {
-    display: flex;
-    align-items: center;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
   }
-  
-  .logo img {
-    height: 40px;
-    margin-right: 10px;
+
+  .navigation {
+    width: 100%;
+    text-align: center;
+    margin: 1rem 0;
   }
-  
-  .logo h1 {
-    font-size: 1.5rem;
-    color: #1e88e5;
-    margin: 0;
-  }
-  
+
   .navigation ul {
-    display: flex;
-    list-style: none;
-    margin: 0;
-    padding: 0;
+    flex-direction: column;
   }
-  
+
   .navigation li {
-    margin: 0 15px;
+    margin: 10px 0;
   }
-  
-  .navigation a {
-    text-decoration: none;
-    color: #333;
-    font-weight: 500;
-    transition: color 0.3s;
-  }
-  
-  .navigation a:hover {
-    color: #1e88e5;
-  }
-  
+
   .buttons {
-    display: flex;
-    gap: 10px;
+    width: 100%;
+    justify-content: center;
   }
-  
-  .serviceBtn {
-    background-color: #1e88e5;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s;
+
+  .serviceBtn,
+  .loginBtn,
+  .registerBtn,
+  .logoutBtn {
+    width: 100%;
+    max-width: 200px;
+    margin: 5px 0;
   }
-  
-  .serviceBtn:hover {
-    background-color: #1565c0;
-  }
-  
-  .loginBtn {
-    background-color: transparent;
-    color: #1e88e5;
-    border: 1px solid #1e88e5;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: all 0.3s;
-  }
-  
-  .loginBtn:hover {
-    background-color: rgba(30, 136, 229, 0.1);
-  }
-  
-  .registerBtn {
-    background-color: #43a047;
-    color: white;
-    border: none;
-    padding: 8px 16px;
-    border-radius: 4px;
-    cursor: pointer;
-    font-weight: 500;
-    transition: background-color 0.3s;
-  }
-  
-  .registerBtn:hover {
-    background-color: #2e7d32;
-  }
-  
-  @media (max-width: 768px) {
-    .header {
-      flex-direction: column;
-      padding: 1rem;
-    }
-    
-    .navigation {
-      margin: 1rem 0;
-    }
-    
-    .buttons {
-      width: 100%;
-      justify-content: center;
-    }
-  }
+}

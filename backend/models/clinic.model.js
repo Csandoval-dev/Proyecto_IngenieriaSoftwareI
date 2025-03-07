@@ -30,3 +30,9 @@ const updateClinicStatus = async (id_clinica, status) => {
     );
     return result.rows[0];
 };
+module.exports = {
+    createClinic,
+    getClinicById,
+    updateClinicEmail,
+    updateClinicStatus
+};

@@ -1,4 +1,4 @@
-const { findUserByUsername, findUserByEmail, createUser } = require('../models/user.model'); // Import the function
+const { findUserByUsername, findUserByEmail, createUser } = require('../models/user.model');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 require('dotenv').config(); // Cargar variables de entorno

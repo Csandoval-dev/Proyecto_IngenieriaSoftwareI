@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom'; // Asumiendo que usas react-router
+import styles from './AdminDashboard.module.css';
 
 const AdminDashboard = () => {
     const [clinics, setClinics] = useState([]);
@@ -86,19 +87,19 @@ const AdminDashboard = () => {
             alert(error.message);
         }
     };
-
+    
     const showRejectForm = (clinic) => {
         setClinicToReject(clinic);
         setRejectReason('');
         setShowRejectModal(true);
     };
-
+    
     const cancelReject = () => {
         setClinicToReject(null);
         setRejectReason('');
         setShowRejectModal(false);
     };
-
+    
     const confirmReject = async () => {
         if (!clinicToReject) return;
         
@@ -130,34 +131,34 @@ const AdminDashboard = () => {
         }
     };
 
-    if (loading) return <div className="loading">Cargando datos...</div>;
-    if (error) return <div className="error">Error: {error}</div>;
+    if (loading) return <div className={styles['loading']}>Cargando datos...</div>;
+    if (error) return <div className={styles['error']}>Error: {error}</div>;
 
     return (
-        <div className="admin-dashboard">
+        <div className={styles['admin-dashboard']}>
             <h1>Dashboard del Administrador General</h1>
             
-            <div className="tabs">
+            <div className={styles['tabs']}>
                 <button 
-                    className={activeTab === 'clinics' ? 'active' : ''} 
+                    className={activeTab === 'clinics' ? styles['active'] : ''} 
                     onClick={() => setActiveTab('clinics')}
                 >
                     Clínicas
                 </button>
                 <button 
-                    className={activeTab === 'pending' ? 'active' : ''} 
+                    className={activeTab === 'pending' ? styles['active'] : ''} 
                     onClick={() => setActiveTab('pending')}
                 >
                     Pendientes ({pendingClinics.length})
                 </button>
                 <button 
-                    className={activeTab === 'admins' ? 'active' : ''} 
+                    className={activeTab === 'admins' ? styles['active'] : ''} 
                     onClick={() => setActiveTab('admins')}
                 >
                     Administradores
                 </button>
                 <button 
-                    className={activeTab === 'users' ? 'active' : ''} 
+                    className={activeTab === 'users' ? styles['active'] : ''} 
                     onClick={() => setActiveTab('users')}
                 >
                     Usuarios
@@ -166,10 +167,10 @@ const AdminDashboard = () => {
             
             {/* Contenido de la pestaña de clínicas registradas */}
             {activeTab === 'clinics' && (
-                <div className="tab-content">
+                <div className={styles['tab-content']}>
                     <h2>Clínicas Registradas ({clinics.filter(c => c.estado === 'activa').length})</h2>
                     {clinics.filter(c => c.estado === 'activa').length > 0 ? (
-                        <table className="data-table">
+                        <table className={styles['data-table']}>
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -199,10 +200,10 @@ const AdminDashboard = () => {
             
             {/* Contenido de la pestaña de clínicas pendientes */}
             {activeTab === 'pending' && (
-                <div className="tab-content">
+                <div className={styles['tab-content']}>
                     <h2>Clínicas Pendientes de Aprobación ({pendingClinics.length})</h2>
                     {pendingClinics.length > 0 ? (
-                        <table className="data-table">
+                        <table className={styles['data-table']}>
                             <thead>
                                 <tr>
                                     <th>Nombre</th>
@@ -221,15 +222,15 @@ const AdminDashboard = () => {
                                         <td>{clinic.direccion}</td>
                                         <td>{clinic.telefono}</td>
                                         <td>{clinic.email || 'N/A'}</td>
-                                        <td className="actions">
+                                        <td className={styles['actions']}>
                                             <button 
-                                                className="approve-btn"
+                                                className={styles['approve-btn']}
                                                 onClick={() => approveClinic(clinic.id_clinica)}
                                             >
                                                 Aprobar
                                             </button>
                                             <button 
-                                                className="reject-btn"
+                                                className={styles['reject-btn']}
                                                 onClick={() => showRejectForm(clinic)}
                                             >
                                                 Rechazar
@@ -247,25 +248,25 @@ const AdminDashboard = () => {
             
             {/* Contenido de la pestaña de administradores */}
             {activeTab === 'admins' && (
-                <div className="tab-content">
+                <div className={styles['tab-content']}>
                     <h2>Administradores de Clínicas ({clinicAdmins.length})</h2>
                     {clinicAdmins.length > 0 ? (
-                        <table className="data-table">
+                        <table className={styles['data-table']}>
                             <thead>
                                 <tr>
                                     <th>ID</th>
                                     <th>Nombre</th>
                                     <th>Email</th>
-                                    <th>Rol</th>
+                                    <th>Clínica</th>
                                 </tr>
                             </thead>
                             <tbody>
                                 {clinicAdmins.map((admin) => (
                                     <tr key={admin.id_usuario}>
                                         <td>{admin.id_usuario}</td>
-                                        <td>{admin.nombre}</td>
+                                        <td>{admin.admin_nombre}</td>
                                         <td>{admin.email}</td>
-                                        <td>{admin.rol}</td>
+                                        <td>{admin.clinica_nombre}</td>
                                     </tr>
                                 ))}
                             </tbody>
@@ -278,10 +279,10 @@ const AdminDashboard = () => {
             
             {/* Contenido de la pestaña de usuarios */}
             {activeTab === 'users' && (
-                <div className="tab-content">
+                <div className={styles['tab-content']}>
                     <h2>Todos los Usuarios ({users.length})</h2>
                     {users.length > 0 ? (
-                        <table className="data-table">
+                        <table className={styles['data-table']}>
                             <thead>
                                 <tr>
                                     <th>ID</th>
@@ -309,11 +310,11 @@ const AdminDashboard = () => {
             
             {/* Modal para rechazar clínica */}
             {showRejectModal && (
-                <div className="modal-overlay">
-                    <div className="modal">
+                <div className={styles['modal-overlay']}>
+                    <div className={styles['modal']}>
                         <h2>Rechazar Clínica</h2>
                         <p>Está a punto de rechazar la solicitud de la clínica <strong>{clinicToReject?.nombre}</strong>.</p>
-                        <div className="form-group">
+                        <div className={styles['form-group']}>
                             <label htmlFor="rejectReason">Razón del rechazo:</label>
                             <textarea 
                                 id="rejectReason"
@@ -323,9 +324,9 @@ const AdminDashboard = () => {
                                 rows="4"
                             ></textarea>
                         </div>
-                        <div className="modal-actions">
-                            <button className="cancel-btn" onClick={cancelReject}>Cancelar</button>
-                            <button className="confirm-btn" onClick={confirmReject}>Confirmar Rechazo</button>
+                        <div className={styles['modal-actions']}>
+                            <button className={styles['cancel-btn']} onClick={cancelReject}>Cancelar</button>
+                            <button className={styles['confirm-btn']} onClick={confirmReject}>Confirmar Rechazo</button>
                         </div>
                     </div>
                 </div>

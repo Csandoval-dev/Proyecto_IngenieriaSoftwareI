@@ -1,9 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import styles from "./ServicesPreview.module.css";
-import consultaIcon from '../Assets/Doctor4.jpg';
-import laboratorioIcon from '../Assets/Doctor5.jpg';
-import especialidadesIcon from '../Assets/Doctor6.jpg';
+import styles from './ServicesPreview.module.css';
+import citasIcon from '../Assets/Citas.jpg';
+import expedientesIcon from '../Assets/Expedientes.jpg';
+import administracionIcon from '../Assets/Administracion.jpg';
 
 function ServicesPreview() {
   const navigate = useNavigate();
@@ -11,54 +11,57 @@ function ServicesPreview() {
 
   const handleServiceClick = (serviceRoute) => {
     if (isAuthenticated) {
-      navigate(`/servicios-clinicos${serviceRoute}`);
+      navigate(`/gestion-clinica${serviceRoute}`);
     } else {
-      navigate('/login', { state: { from: `/servicios-clinicos${serviceRoute}` } });
+      navigate('/login', { state: { from: `/gestion-clinica${serviceRoute}` } });
     }
   };
 
   return (
     <section className={styles.services} id="servicios">
-      <h2>Nuestros Servicios</h2>
+      <h2>Optimiza la Gestión de tu Clínica</h2>
       <p className={styles.servicesIntro}>
-        Ofrecemos una amplia gama de servicios médicos para cuidar de tu salud en todas las etapas de tu vida.
+        Nuestra plataforma facilita la administración clínica con herramientas innovadoras para mejorar la eficiencia y calidad del servicio.
       </p>
       
       <div className={styles.servicesGrid}>
         <div className={styles.serviceCard}>
-          <img src={consultaIcon} alt="Consulta médica" />
-          <h3>Consulta General</h3>
-          <p>Atención médica de calidad para toda la familia con médicos especialistas.</p>
-          <button onClick={() => handleServiceClick('/consulta-general')}>Ver más</button>
+          <img src={citasIcon} alt="Gestión de Citas" />
+          <h3>Gestión de Citas</h3>
+          <p>Administra fácilmente la agenda de pacientes con recordatorios y confirmaciones automáticas.</p>
+          <button onClick={() => handleServiceClick('/gestion-citas')}>Más Información</button>
         </div>
         
         <div className={styles.serviceCard}>
-          <img src={laboratorioIcon} alt="Laboratorio clínico" />
-          <h3>Laboratorio Clínico</h3>
-          <p>Análisis clínicos con la última tecnología y resultados en tiempo récord.</p>
-          <button onClick={() => handleServiceClick('/laboratorio')}>Ver más</button>
+          <img src={expedientesIcon} alt="Expedientes Médicos Digitales" />
+          <h3>Expedientes Médicos Digitales</h3>
+          <p>Accede a historiales médicos de manera segura y en tiempo real.</p>
+          <button onClick={() => handleServiceClick('/expedientes-medicos')}>Más Información</button>
         </div>
         
         <div className={styles.serviceCard}>
-          <img src={especialidadesIcon} alt="Especialidades médicas" />
-          <h3>Especialidades</h3>
-          <p>Contamos con más de 20 especialidades para atender todas tus necesidades.</p>
-          <button onClick={() => handleServiceClick('/especialidades')}>Ver más</button>
+          <img src={administracionIcon} alt="Administración de Clínicas" />
+          <h3>Administración de Clínicas</h3>
+          <p>Optimiza recursos, gestiona personal y mejora la experiencia de los pacientes.</p>
+          <button onClick={() => handleServiceClick('/administracion-clinica')}>Más Información</button>
         </div>
       </div>
       
-      <button 
-        className={styles.allServicesBtn}
-        onClick={() => {
-          if (isAuthenticated) {
-            navigate('/servicios-clinicos');
-          } else {
-            navigate('/login', { state: { from: '/servicios-clinicos' } });
-          }
-        }}
-      >
-        Ver todos los servicios
-      </button>
+      <div className={styles.servicesFooter}>
+        <p>Transforma la manera en que manejas tu clínica con nuestras soluciones tecnológicas.</p>
+        <button 
+          className={styles.allServicesBtn}
+          onClick={() => {
+            if (isAuthenticated) {
+              navigate('/gestion-clinica');
+            } else {
+              navigate('/login', { state: { from: '/gestion-clinica' } });
+            }
+          }}
+        >
+          Explorar Más Funcionalidades
+        </button>
+      </div>
     </section>
   );
 }

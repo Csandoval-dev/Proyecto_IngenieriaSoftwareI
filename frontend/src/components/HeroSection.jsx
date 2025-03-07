@@ -18,21 +18,24 @@ function HeroSection({ onButtonClick }) {
   return (
     <section className={styles.hero} id="inicio">
       <div className={styles.heroContent}>
-        <h2>Cuidando tu salud con excelencia</h2>
-        <p>
-          En HealthConnect, nos dedicamos a brindarte la mejor atención médica con profesionales altamente calificados y tecnología de vanguardia. Tu bienestar es nuestra prioridad.
-        </p>
-        <div className={styles.cta}>
-          <button className={styles.primaryBtn} onClick={handleAgendarCita}>
-            Agendar Cita
-          </button>
-          <button className={styles.secondaryBtn} onClick={() => navigate('/nosotros')}>
-            Conocer Más
-          </button>
+        <div className={styles.textContent}>
+          <h2>Gestión Médica Inteligente y Accesible</h2>
+          <p>
+            Conecta con los mejores especialistas y gestiona tus citas de manera rápida y eficiente.  
+            En <strong>HealthConnect</strong>, ofrecemos una solución moderna para clínicas y pacientes, optimizando tiempos y mejorando la experiencia en el cuidado de la salud.
+          </p>
+          <div className={styles.cta}>
+            <button className={styles.primaryBtn} onClick={handleAgendarCita}>
+              Reserva tu Cita
+            </button>
+            <button className={styles.secondaryBtn} onClick={() => navigate('/nosotros')}>
+              Descubre Más
+            </button>
+          </div>
         </div>
-      </div>
-      <div className={styles.heroImage}>
-        <img src={heroImage} alt="Profesionales médicos" />
+        <div className={styles.heroImage}>
+          <img src={heroImage} alt="Atención médica profesional" />
+        </div>
       </div>
     </section>
   );

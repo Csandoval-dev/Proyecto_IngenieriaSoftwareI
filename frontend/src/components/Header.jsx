@@ -1,7 +1,6 @@
 import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import styles from './Header.module.css';
-import logo from '../Assets/Doctor1.jpg';
 
 function Header() {
   const navigate = useNavigate();
@@ -21,7 +20,6 @@ function Header() {
     <header className={styles.header}>
       <div className={styles.logo}>
         <Link to="/">
-          <img src={logo} alt="Clínica Logo" />
           <h1>HealthConnect</h1>
         </Link>
       </div>

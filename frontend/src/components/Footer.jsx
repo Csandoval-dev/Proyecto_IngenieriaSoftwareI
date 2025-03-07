@@ -1,4 +1,3 @@
-// src/components/Footer.jsx
 import React from 'react';
 import styles from './Footer.module.css';
 import logo from '../Assets/Doctor2.jpg';
@@ -9,7 +8,7 @@ function Footer() {
       <div className={styles.footerContent}>
         <div className={styles.footerLogo}>
           <img src={logo} alt="Clínica Logo" />
-          <h3>MediSalud</h3>
+          <h3>HealthConnect</h3>
         </div>
         
         <div className={styles.footerLinks}>
@@ -26,7 +25,7 @@ function Footer() {
         <div className={styles.footerContact}>
           <h4>Contacto</h4>
           <p>Av. Principal #123, Ciudad</p>
-          <p>Email: info@medisalud.com</p>
+          <p>Email: info@healthconnect.com</p>
           <p>Teléfono: (123) 456-7890</p>
         </div>
         
@@ -41,7 +40,7 @@ function Footer() {
       </div>
       
       <div className={styles.footerBottom}>
-        <p>&copy; 2025 MediSalud. Todos los derechos reservados.</p>
+        <p>&copy; 2025 HealthConnect. Todos los derechos reservados.</p>
         <div className={styles.socialLinks}>
           <a href="#">Facebook</a>
           <a href="#">Twitter</a>

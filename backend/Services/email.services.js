@@ -1,22 +1,40 @@
-// email.services.js
+const nodemailer = require('nodemailer');
 
-const nodemailer = require('nodemailer'); // Asegúrate de tener nodemailer instalado
-
-// Configuración del transporter (ajustar según tu proveedor de correo)
-const transporter = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST || 'smtp.example.com',
-    port: process.env.EMAIL_PORT || 587,
-    secure: process.env.EMAIL_SECURE === 'true',
-    auth: {
-        user: process.env.EMAIL_USER || 'user@example.com',
-        pass: process.env.EMAIL_PASS || 'password'
+// Configuración del transporter para Gmail con mejor manejo de errores
+const createTransporter = () => {
+    const user = process.env.EMAIL_USER;
+    const pass = process.env.EMAIL_PASSWORD;
+    
+    if (!user || !pass) {
+        console.warn('ADVERTENCIA: Variables de entorno EMAIL_USER o EMAIL_PASSWORD no configuradas correctamente');
+        // Usar valores por defecto solo para desarrollo
+        return nodemailer.createTransport({
+            service: 'gmail',
+            auth: {
+                user: process.env.EMAIL_USER || 'system@clinicas.com',
+                pass: process.env.EMAIL_PASSWORD || 'password_placeholder'
+            }
+        });
     }
-});
+    
+    return nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: user,
+            pass: pass
+        }
+    });
+};
 
 // Enviar credenciales de administrador
 const sendAdminCredentials = async (clinicName, email, password) => {
+    const transporter = createTransporter();
+    
     try {
-        await transporter.sendMail({
+        // Verificar conexión antes de enviar
+        await transporter.verify();
+        
+        const info = await transporter.sendMail({
             from: `"Sistema de Gestión de Clínicas" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: `Bienvenido al Sistema - Credenciales de Administrador para ${clinicName}`,
@@ -35,17 +53,26 @@ const sendAdminCredentials = async (clinicName, email, password) => {
                 </div>
             `
         });
+        
+        console.log('Email enviado: %s', info.messageId);
         return true;
     } catch (error) {
         console.error('Error enviando email:', error);
-        return false;
+        throw error; // Re-lanzar el error para manejarlo en el controlador
+    } finally {
+        transporter.close();
     }
 };
 
 // Enviar notificación de rechazo
 const sendRejectionNotification = async (clinicName, email, reason) => {
+    const transporter = createTransporter();
+    
     try {
-        await transporter.sendMail({
+        // Verificar conexión antes de enviar
+        await transporter.verify();
+        
+        const info = await transporter.sendMail({
             from: `"Sistema de Gestión de Clínicas" <${process.env.EMAIL_USER}>`,
             to: email,
             subject: `Solicitud de Registro Rechazada - ${clinicName}`,
@@ -62,9 +89,18 @@ const sendRejectionNotification = async (clinicName, email, reason) => {
                 </div>
             `
         });
+        
+        console.log('Email de rechazo enviado: %s', info.messageId);
         return true;
     } catch (error) {
-          console.error('Error enviando email de rechazo:', error);
-        return false;
+        console.error('Error enviando email de rechazo:', error);
+        throw error; // Re-lanzar el error para manejarlo en el controlador
+    } finally {
+        transporter.close();
     }
+};
+
+module.exports = {
+    sendAdminCredentials,
+    sendRejectionNotification
 };
