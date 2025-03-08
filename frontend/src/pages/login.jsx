@@ -22,7 +22,6 @@ const Login = () => {
     const [showPassword, setShowPassword] = useState(false);
     const [isLoading, setIsLoading] = useState(false);
     const [appear, setAppear] = useState(false);
-    const [activeTab, setActiveTab] = useState('credentials');
 
     const navigate = useNavigate();
     const location = useLocation();
@@ -119,112 +118,86 @@ const Login = () => {
                     <h2 className={styles.title}>Iniciar Sesión</h2>
                     <p className={styles.subtitle}>Accede a tu cuenta para continuar</p>
                     
-                    <div className={styles.tabs}>
+                    <div className={styles.inputGroup}>
+                        <FaUser className={styles.inputIcon} />
+                        <input
+                            type="text"
+                            name="username"
+                            placeholder="Nombre de usuario"
+                            value={formData.username}
+                            onChange={handleChange}
+                            className={styles.input}
+                            required
+                        />
+                    </div>
+                    
+                    <div className={styles.inputGroup}>
+                        <FaLock className={styles.inputIcon} />
+                        <input
+                            type={showPassword ? "text" : "password"}
+                            name="password"
+                            placeholder="Contraseña"
+                            value={formData.password}
+                            onChange={handleChange}
+                            className={styles.input}
+                            required
+                        />
                         <button 
-                            type="button"
-                            className={`${styles.tab} ${activeTab === 'credentials' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('credentials')}
+                            type="button" 
+                            className={styles.visibilityToggle}
+                            onClick={togglePasswordVisibility}
                         >
-                            Credenciales
-                        </button>
-                        <button 
-                            type="button"
-                            className={`${styles.tab} ${activeTab === 'social' ? styles.activeTab : ''}`}
-                            onClick={() => setActiveTab('social')}
-                        >
-                            Redes Sociales
+                            {showPassword ? <FaEyeSlash /> : <FaEye />}
                         </button>
                     </div>
                     
-                    <div className={styles.tabContent}>
-                        {activeTab === 'credentials' ? (
-                            <div className={styles.credentialsTab}>
-                                <div className={styles.inputGroup}>
-                                    <FaUser className={styles.inputIcon} />
-                                    <input
-                                        type="text"
-                                        name="username"
-                                        placeholder="Nombre de usuario"
-                                        value={formData.username}
-                                        onChange={handleChange}
-                                        className={styles.input}
-                                        required
-                                    />
-                                </div>
-                                
-                                <div className={styles.inputGroup}>
-                                    <FaLock className={styles.inputIcon} />
-                                    <input
-                                        type={showPassword ? "text" : "password"}
-                                        name="password"
-                                        placeholder="Contraseña"
-                                        value={formData.password}
-                                        onChange={handleChange}
-                                        className={styles.input}
-                                        required
-                                    />
-                                    <button 
-                                        type="button" 
-                                        className={styles.visibilityToggle}
-                                        onClick={togglePasswordVisibility}
-                                    >
-                                        {showPassword ? <FaEyeSlash /> : <FaEye />}
-                                    </button>
-                                </div>
-                                
-                                <div className={styles.forgotPassword}>
-                                    <a href="#forgot">¿Olvidaste tu contraseña?</a>
-                                </div>
-                                
-                                <button 
-                                    type="submit" 
-                                    className={styles.button}
-                                    disabled={isLoading}
-                                >
-                                    {isLoading ? (
-                                        <div className={styles.loader}></div>
-                                    ) : (
-                                        <>
-                                            Iniciar Sesión
-                                            <FaChevronRight className={styles.buttonIcon} />
-                                        </>
-                                    )}
-                                </button>
-                            </div>
+                    <div className={styles.forgotPassword}>
+                        <a href="#forgot">¿Olvidaste tu contraseña?</a>
+                    </div>
+                    
+                    <button 
+                        type="submit" 
+                        className={styles.button}
+                        disabled={isLoading}
+                    >
+                        {isLoading ? (
+                            <div className={styles.loader}></div>
                         ) : (
-                            <div className={styles.socialTab}>
-                                <button 
-                                    type="button" 
-                                    className={`${styles.socialButton} ${styles.googleButton}`}
-                                    onClick={() => handleSocialLogin('Google')}
-                                >
-                                    <FaGoogle className={styles.socialIcon} />
-                                    Continuar con Google
-                                </button>
-                                
-                                <button 
-                                    type="button" 
-                                    className={`${styles.socialButton} ${styles.facebookButton}`}
-                                    onClick={() => handleSocialLogin('Facebook')}
-                                >
-                                    <FaFacebook className={styles.socialIcon} />
-                                    Continuar con Facebook
-                                </button>
-                                
-                                <button 
-                                    type="button" 
-                                    className={`${styles.socialButton} ${styles.githubButton}`}
-                                    onClick={() => handleSocialLogin('GitHub')}
-                                >
-                                    <FaGithub className={styles.socialIcon} />
-                                    Continuar con GitHub
-                                </button>
-                            </div>
+                            <>
+                                Iniciar Sesión
+                                <FaChevronRight className={styles.buttonIcon} />
+                            </>
                         )}
-                    </div>
-                    
+                    </button>
+
                     <div className={styles.divider}>
                         <span>O</span>
+                    </div>
+
+                    <div className={styles.socialLogin}>
+                        <button 
+                            type="button" 
+                            className={`${styles.socialButton} ${styles.googleButton}`}
+                            onClick={() => handleSocialLogin('Google')}
+                        >
+                            <FaGoogle className={styles.socialIcon} />
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            className={`${styles.socialButton} ${styles.facebookButton}`}
+                            onClick={() => handleSocialLogin('Facebook')}
+                        >
+                            <FaFacebook className={styles.socialIcon} />
+                        </button>
+                        
+                        <button 
+                            type="button" 
+                            className={`${styles.socialButton} ${styles.githubButton}`}
+                            onClick={() => handleSocialLogin('GitHub')}
+                        >
+                            <FaGithub className={styles.socialIcon} />
+                        </button>
                     </div>
                     
                     <p className={styles.registerText}>

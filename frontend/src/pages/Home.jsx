@@ -1,11 +1,9 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './Home.module.css';
-import Header from '../components/Header';
 import HeroSection from '../components/HeroSection';
 import ServicesPreview from '../components/ServicesPreview';
 import CarouselComponent from '../components/Carousel'; 
-import Footer from '../components/Footer';
 
 function HomePage() {
   const navigate = useNavigate();
@@ -22,11 +20,9 @@ function HomePage() {
 
   return (
     <div className={styles.container}>
-      <Header />
       <HeroSection onButtonClick={handleServiceClick} />
       <ServicesPreview onServiceClick={handleServiceClick} />
       <CarouselComponent />
-      <Footer />
     </div>
   );
 }

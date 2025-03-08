@@ -18,6 +18,11 @@ const createUser = async (userData) => {
         id_clinica = arguments[4] || null;
     }
     
+    // Validar que la contraseña sea una cadena antes de hashearla
+    if (!contrasena || typeof contrasena !== 'string') {
+        throw new TypeError('La contraseña debe ser una cadena de texto válida.');
+    }
+
     // Hashear la contraseña
     const hashedPassword = await bcrypt.hash(contrasena, 10);
     

@@ -1,30 +1,42 @@
 const nodemailer = require('nodemailer');
 
-// Configuración del transporter para Gmail con mejor manejo de errores
 const createTransporter = () => {
     const user = process.env.EMAIL_USER;
     const pass = process.env.EMAIL_PASSWORD;
-    
+
     if (!user || !pass) {
-        console.warn('ADVERTENCIA: Variables de entorno EMAIL_USER o EMAIL_PASSWORD no configuradas correctamente');
-        // Usar valores por defecto solo para desarrollo
+        console.warn('⚠️ ADVERTENCIA: Variables de entorno EMAIL_USER o EMAIL_PASSWORD no configuradas correctamente.');
+
+        if (process.env.NODE_ENV === 'production') {
+            throw new Error('❌ ERROR: No se puede inicializar el transporter sin credenciales en producción.');
+        }
+
+        // Solo para desarrollo
         return nodemailer.createTransport({
             service: 'gmail',
             auth: {
-                user: process.env.EMAIL_USER || 'system@clinicas.com',
-                pass: process.env.EMAIL_PASSWORD || 'password_placeholder'
+                user: 'system@clinicas.com',
+                pass: 'password_placeholder'
+            },
+            tls: {
+                rejectUnauthorized: false // 🔧 Evita errores de certificado en entornos de prueba
             }
         });
     }
-    
+
     return nodemailer.createTransport({
         service: 'gmail',
         auth: {
             user: user,
             pass: pass
+        },
+        tls: {
+            rejectUnauthorized: false // 🔧 Solución al error de certificado autofirmado
         }
     });
 };
+
+module.exports = createTransporter;
 
 // Enviar credenciales de administrador
 const sendAdminCredentials = async (clinicName, email, password) => {

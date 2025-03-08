@@ -77,7 +77,7 @@ const Register = () => {
                 nombre: formData.name,
                 email: formData.email,
                 contrasena: formData.password,
-                id_rol: 3
+                id_rol: 4
             });
 
             alert('¡Registro exitoso! Ahora puedes iniciar sesión');

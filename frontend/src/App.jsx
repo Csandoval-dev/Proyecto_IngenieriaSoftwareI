@@ -8,7 +8,6 @@ import AdminDashboard from './components/AdminDashboard';
 import ClinicAdminDashboard from './components/ClinicAdminDashboard';
 import RegisterClinic from './components/RegisterClinic';
 import Header from './components/Header';
-import Footer from './components/Footer';
 
 const PrivateRoute = ({ component: Component, requiredRole, ...rest }) => {
     const isAuthenticated = !!localStorage.getItem('token');
@@ -34,7 +33,7 @@ const PublicRoute = ({ component: Component, restricted, ...rest }) => {
             return <Navigate to="/admin-dashboard" />;
         } else if (userRole === '2') {
             return <Navigate to="/clinic-admin-dashboard" />;
-        } else {
+        } else if (userRole === '3') {
             return <Navigate to="/servicios-clinicos" />;
         }
     }
@@ -57,7 +56,7 @@ function App() {
                     <Route path="/clinic-admin-dashboard" element={<PrivateRoute component={ClinicAdminDashboard} requiredRole="2" />} />
                 </Routes>
             </div>
-            <Footer />
+        
         </Router>
     );
 }

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom'; // Asumiendo que usas react-router
+import { useNavigate } from 'react-router-dom';
 import styles from './AdminDashboard.module.css';
 
 const AdminDashboard = () => {
@@ -264,9 +264,9 @@ const AdminDashboard = () => {
                                 {clinicAdmins.map((admin) => (
                                     <tr key={admin.id_usuario}>
                                         <td>{admin.id_usuario}</td>
-                                        <td>{admin.admin_nombre}</td>
-                                        <td>{admin.email}</td>
-                                        <td>{admin.clinica_nombre}</td>
+                                        <td>{admin.nombre}</td>
+                                         <td>{admin.email}</td>
+                                         <td>{admin.nombre_clinica}</td>
                                     </tr>
                                 ))}
                             </tbody>

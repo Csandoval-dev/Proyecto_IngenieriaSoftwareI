@@ -55,12 +55,12 @@ const register = async (req, res) => {
             return res.status(400).json({ message: 'El email ya está registrado' });
         }
 
-        // Encriptar contraseña
+        // Encriptar contraseñan
         const salt = await bcrypt.genSalt(10); // Generar un salt
         const contrasenaEncriptada = await bcrypt.hash(contrasena, salt); // Encriptar la contraseña
 
         // Insertar nuevo usuario con la contraseña encriptada
-        await createUser(nombre, email, contrasenaEncriptada, id_rol);
+        await createUser({ nombre, email, contrasena: contrasenaEncriptada, id_rol });
 
         res.status(201).json({ message: 'Usuario registrado exitosamente' });
     } catch (error) {
