@@ -1,7 +1,7 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import styles from './HeroSection.module.css';
-import heroImage from '../Assets/Doctor3.jpg';
+import heroImage from '../Assets/Doctor8.jpg';
 
 function HeroSection({ onButtonClick }) {
   const navigate = useNavigate();
