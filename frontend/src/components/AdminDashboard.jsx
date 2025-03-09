@@ -292,7 +292,7 @@ const AdminDashboard = () => {
                                 </tr>
                             </thead>
                             <tbody>
-                                {users.map((user) => (
+                                {users.sort((a, b) => a.id_usuario - b.id_usuario).map((user) => (
                                     <tr key={user.id_usuario}>
                                         <td>{user.id_usuario}</td>
                                         <td>{user.nombre}</td>
