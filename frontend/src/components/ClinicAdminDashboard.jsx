@@ -1,238 +1,285 @@
-import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+// ClinicAdminDashboard.jsx
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
+import { toast } from 'react-toastify';
 
 const ClinicAdminDashboard = () => {
-    const [clinic, setClinic] = useState(null);
-    const [doctors, setDoctors] = useState([]);
-    const [specialties, setSpecialties] = useState([]);
-    const [loading, setLoading] = useState(true);
-    const [error, setError] = useState(null);
-    const [activeTab, setActiveTab] = useState('doctors');
-    const [showAddDoctorForm, setShowAddDoctorForm] = useState(false);
-    const [newDoctor, setNewDoctor] = useState({
-        nombre: '',
-        id_especialidad: '',
-        horario_disponibles: ''
-    });
-    
-    const navigate = useNavigate();
+  const [clinic, setClinic] = useState(null);
+  const [doctors, setDoctors] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [specialties, setSpecialties] = useState([]);
+  const [selectedDoctor, setSelectedDoctor] = useState(null);
+  
+  // Estado para el formulario de nuevo/editar médico
+  const [doctorForm, setDoctorForm] = useState({
+    nombre: '',
+    id_especialidad: '',
+    horario_disponibles: ''
+  });
 
-    const fetchClinicData = async () => {
+  // Obtener datos iniciales
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
         setLoading(true);
-        try {
-            // Obtener información de la clínica asociada al administrador
-            const clinicResponse = await fetch('http://localhost:5002/api/clinic-admin/my-clinic', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            
-            if (!clinicResponse.ok) throw new Error('Error obteniendo información de la clínica');
-            const clinicData = await clinicResponse.json();
-            setClinic(clinicData);
-            
-            // Obtener los médicos de la clínica
-            const doctorsResponse = await fetch(`http://localhost:5002/api/clinic-admin/doctors`, {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            
-            if (!doctorsResponse.ok) throw new Error('Error obteniendo médicos');
-            const doctorsData = await doctorsResponse.json();
-            setDoctors(Array.isArray(doctorsData) ? doctorsData : []);
-            
-            // Obtener especialidades disponibles
-            const specialtiesResponse = await fetch('http://localhost:5002/api/specialties', {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-            });
-            
-            if (!specialtiesResponse.ok) throw new Error('Error obteniendo especialidades');
-            const specialtiesData = await specialtiesResponse.json();
-            setSpecialties(Array.isArray(specialtiesData) ? specialtiesData : []);
-            
-            setError(null);
-        } catch (err) {
-            console.error('Error fetching data:', err);
-            setError(err.message);
-        } finally {
-            setLoading(false);
-        }
+        // Obtener información de la clínica
+        const clinicRes = await axios.get('/api/clinic-admin/my-clinic');
+        setClinic(clinicRes.data);
+        
+        // Obtener médicos
+        const doctorsRes = await axios.get('/api/clinic-admin/doctors');
+        setDoctors(doctorsRes.data);
+        
+        // Obtener especialidades
+        const specialtiesRes = await axios.get('/api/specialties');
+        setSpecialties(specialtiesRes.data);
+        
+        setLoading(false);
+      } catch (error) {
+        console.error('Error loading data:', error);
+        toast.error('Error al cargar los datos');
+        setLoading(false);
+      }
     };
-
-    useEffect(() => {
-        fetchClinicData();
-    }, []);
-
-    const handleInputChange = (e) => {
-        const { name, value } = e.target;
-        setNewDoctor({
-            ...newDoctor,
-            [name]: value
-        });
-    };
-
-    const handleAddDoctor = async (e) => {
-        e.preventDefault();
-        try {
-            const response = await fetch('http://localhost:5002/api/clinic-admin/doctors', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json',
-                    Authorization: `Bearer ${localStorage.getItem('token')}`
-                },
-                body: JSON.stringify(newDoctor)
-            });
-            
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || 'Error al agregar médico');
-            }
-            
-            // Actualizar la lista de médicos
-            await fetchClinicData();
-            
-            // Resetear el formulario
-            setNewDoctor({
-                nombre: '',
-                id_especialidad: '',
-                horario_disponibles: ''
-            });
-            
-            setShowAddDoctorForm(false);
-            alert('Médico agregado correctamente');
-        } catch (error) {
-            console.error('Error:', error);
-            alert(error.message);
-        }
-    };
-
-    if (loading) return <div className="loading">Cargando datos...</div>;
-    if (error) return <div className="error">Error: {error}</div>;
-    if (!clinic) return <div className="error">No se encontró información de la clínica</div>;
-
-    return (
-        <div className="clinic-admin-dashboard">
-            <h1>Panel de Administración - {clinic.nombre}</h1>
-            <div className="clinic-info">
-                <p><strong>Tipo:</strong> {clinic.tipo}</p>
-                <p><strong>Dirección:</strong> {clinic.direccion}</p>
-                <p><strong>Teléfono:</strong> {clinic.telefono}</p>
+    
+    fetchData();
+  }, []);
+  
+  // Manejar cambios en el formulario
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setDoctorForm({
+      ...doctorForm,
+      [name]: value
+    });
+  };
+  
+  // Preparar formulario para editar médico
+  const handleEditDoctor = (doctor) => {
+    setSelectedDoctor(doctor);
+    setDoctorForm({
+      nombre: doctor.nombre,
+      id_especialidad: doctor.id_especialidad,
+      horario_disponibles: doctor.horario_disponibles
+    });
+  };
+  
+  // Cancelar edición
+  const handleCancelEdit = () => {
+    setSelectedDoctor(null);
+    setDoctorForm({
+      nombre: '',
+      id_especialidad: '',
+      horario_disponibles: ''
+    });
+  };
+  
+  // Guardar médico (nuevo o editado)
+  const handleSubmitDoctor = async (e) => {
+    e.preventDefault();
+    try {
+      let response;
+      
+      if (selectedDoctor) {
+        // Actualizar médico existente
+        response = await axios.put(`/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm);
+        
+        // Actualizar lista de médicos
+        setDoctors(doctors.map(doc => 
+          doc.id_medico === selectedDoctor.id_medico ? response.data.medico : doc
+        ));
+        
+        toast.success('Médico actualizado exitosamente');
+      } else {
+        // Agregar nuevo médico
+        response = await axios.post('/api/clinic-admin/doctors', doctorForm);
+        
+        // Añadir a la lista de médicos
+        setDoctors([...doctors, response.data.medico]);
+        
+        toast.success('Médico agregado exitosamente');
+      }
+      
+      // Limpiar formulario y estado de edición
+      handleCancelEdit();
+      
+    } catch (error) {
+      console.error('Error saving doctor:', error);
+      toast.error(error.response?.data?.message || 'Error al guardar médico');
+    }
+  };
+  
+  // Eliminar médico
+  const handleDeleteDoctor = async (id_medico) => {
+    if (!window.confirm('¿Está seguro que desea eliminar este médico?')) return;
+    
+    try {
+      await axios.delete(`/api/clinic-admin/doctors/${id_medico}`);
+      
+      // Actualizar lista de médicos
+      setDoctors(doctors.filter(doc => doc.id_medico !== id_medico));
+      
+      toast.success('Médico eliminado exitosamente');
+      
+      // Si estamos editando el médico eliminado, limpiar formulario
+      if (selectedDoctor && selectedDoctor.id_medico === id_medico) {
+        handleCancelEdit();
+      }
+    } catch (error) {
+      console.error('Error deleting doctor:', error);
+      toast.error(error.response?.data?.message || 'Error al eliminar médico');
+    }
+  };
+  
+  if (loading) return <div className="text-center mt-5">Cargando datos...</div>;
+  
+  return (
+    <div className="container mt-4">
+      <h1 className="mb-4">Dashboard Administrador - {clinic?.nombre}</h1>
+      
+      <div className="row">
+        <div className="col-md-4">
+          <div className="card mb-4">
+            <div className="card-header bg-primary text-white">
+              <h5 className="card-title mb-0">Información de la Clínica</h5>
             </div>
-            
-            <div className="tabs">
-                <button 
-                    className={activeTab === 'doctors' ? 'active' : ''} 
-                    onClick={() => setActiveTab('doctors')}
-                >
-                    Médicos
-                </button>
-                <button 
-                    className={activeTab === 'appointments' ? 'active' : ''} 
-                    onClick={() => setActiveTab('appointments')}
-                >
-                    Citas
-                </button>
+            <div className="card-body">
+              <p><strong>Nombre:</strong> {clinic?.nombre}</p>
+              <p><strong>Tipo:</strong> {clinic?.tipo}</p>
+              <p><strong>Dirección:</strong> {clinic?.direccion}</p>
+              <p><strong>Teléfono:</strong> {clinic?.telefono}</p>
+              <p><strong>Email:</strong> {clinic?.email}</p>
             </div>
-            
-            {/* Contenido de la pestaña de médicos */}
-            {activeTab === 'doctors' && (
-                <div className="tab-content">
-                    <div className="header-actions">
-                        <h2>Médicos de la Clínica ({doctors.length})</h2>
-                        <button 
-                            className="add-btn"
-                            onClick={() => setShowAddDoctorForm(!showAddDoctorForm)}
-                        >
-                            {showAddDoctorForm ? 'Cancelar' : 'Agregar Médico'}
-                        </button>
-                    </div>
-                    
-                    {showAddDoctorForm && (
-                        <form className="add-doctor-form" onSubmit={handleAddDoctor}>
-                            <div className="form-group">
-                                <label>Nombre del Médico:</label>
-                                <input 
-                                    type="text" 
-                                    name="nombre" 
-                                    value={newDoctor.nombre} 
-                                    onChange={handleInputChange}
-                                    required
-                                />
-                            </div>
-                            <div className="form-group">
-                                <label>Especialidad:</label>
-                                <select 
-                                    name="id_especialidad" 
-                                    value={newDoctor.id_especialidad}
-                                    onChange={handleInputChange}
-                                    required
-                                >
-                                    <option value="">Selecciona una especialidad</option>
-                                    {specialties.map(specialty => (
-                                        <option key={specialty.id_especialidad} value={specialty.id_especialidad}>
-                                            {specialty.nombre}
-                                        </option>
-                                    ))}
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label>Horario Disponible:</label>
-                                <input 
-                                    type="text" 
-                                    name="horario_disponibles" 
-                                    value={newDoctor.horario_disponibles} 
-                                    onChange={handleInputChange}
-                                    placeholder="Ej: Lunes-Viernes 8AM-12PM, 2PM-6PM"
-                                    required
-                                />
-                            </div>
-                            <button type="submit" className="submit-btn">Guardar Médico</button>
-                        </form>
-                    )}
-                    
-                    {doctors.length > 0 ? (
-                        <table className="data-table">
-                            <thead>
-                                <tr>
-                                    <th>ID</th>
-                                    <th>Nombre</th>
-                                    <th>Especialidad</th>
-                                    <th>Horario</th>
-                                    <th>Acciones</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                {doctors.map((doctor) => (
-                                    <tr key={doctor.id_medico}>
-                                        <td>{doctor.id_medico}</td>
-                                        <td>{doctor.nombre}</td>
-                                        <td>{doctor.especialidad}</td>
-                                        <td>{doctor.horario_disponibles}</td>
-                                        <td className="actions">
-                                            <button 
-                                                className="edit-btn"
-                                                onClick={() => navigate(`/doctor/${doctor.id_medico}/edit`)}
-                                            >
-                                                Editar
-                                            </button>
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    ) : (
-                        <p>No hay médicos registrados en esta clínica</p>
-                    )}
-                </div>
-            )}
-            
-            {/* Contenido de la pestaña de citas */}
-            {activeTab === 'appointments' && (
-                <div className="tab-content">
-                    <h2>Citas Médicas</h2>
-                    <p>Aquí se mostrará un listado de las citas programadas en la clínica.</p>
-                    {/* Implementar cuando se desarrolle la funcionalidad de citas */}
-                </div>
-            )}
+          </div>
         </div>
-    );
+        
+        <div className="col-md-8">
+          <div className="card mb-4">
+            <div className="card-header bg-success text-white">
+              <h5 className="card-title mb-0">
+                {selectedDoctor ? 'Editar Médico' : 'Agregar Médico'}
+              </h5>
+            </div>
+            <div className="card-body">
+              <form onSubmit={handleSubmitDoctor}>
+                <div className="mb-3">
+                  <label htmlFor="nombre" className="form-label">Nombre del Médico</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="nombre"
+                    name="nombre"
+                    value={doctorForm.nombre}
+                    onChange={handleInputChange}
+                    required
+                  />
+                </div>
+                
+                <div className="mb-3">
+                  <label htmlFor="id_especialidad" className="form-label">Especialidad</label>
+                  <select
+                    className="form-control"
+                    id="id_especialidad"
+                    name="id_especialidad"
+                    value={doctorForm.id_especialidad}
+                    onChange={handleInputChange}
+                    required
+                  >
+                    <option value="">Seleccionar especialidad</option>
+                    {specialties.map(specialty => (
+                      <option key={specialty.id_especialidad} value={specialty.id_especialidad}>
+                        {specialty.nombre}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="mb-3">
+                  <label htmlFor="horario_disponibles" className="form-label">Horario Disponible</label>
+                  <input
+                    type="text"
+                    className="form-control"
+                    id="horario_disponibles"
+                    name="horario_disponibles"
+                    value={doctorForm.horario_disponibles}
+                    onChange={handleInputChange}
+                    placeholder="Ej: Lunes-Viernes 8:00-16:00"
+                    required
+                  />
+                </div>
+                
+                <div className="d-flex gap-2">
+                  <button type="submit" className="btn btn-success">
+                    {selectedDoctor ? 'Actualizar Médico' : 'Agregar Médico'}
+                  </button>
+                  {selectedDoctor && (
+                    <button 
+                      type="button" 
+                      className="btn btn-secondary" 
+                      onClick={handleCancelEdit}
+                    >
+                      Cancelar
+                    </button>
+                  )}
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div className="card mb-4">
+        <div className="card-header bg-info">
+          <h5 className="card-title mb-0">Médicos de la Clínica</h5>
+        </div>
+        <div className="card-body">
+          <div className="table-responsive">
+            <table className="table table-striped">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Especialidad</th>
+                  <th>Horario</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {doctors.length > 0 ? (
+                  doctors.map(doctor => (
+                    <tr key={doctor.id_medico}>
+                      <td>{doctor.id_medico}</td>
+                      <td>{doctor.nombre}</td>
+                      <td>{doctor.especialidad}</td>
+                      <td>{doctor.horario_disponibles}</td>
+                      <td>
+                        <button 
+                          className="btn btn-sm btn-primary me-2"
+                          onClick={() => handleEditDoctor(doctor)}
+                        >
+                          Editar
+                        </button>
+                        <button 
+                          className="btn btn-sm btn-danger"
+                          onClick={() => handleDeleteDoctor(doctor.id_medico)}
+                        >
+                          Eliminar
+                        </button>
+                      </td>
+                    </tr>
+                  ))
+                ) : (
+                  <tr>
+                    <td colSpan="5" className="text-center">No hay médicos registrados</td>
+                  </tr>
+                )}
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ClinicAdminDashboard;

@@ -56,6 +56,8 @@ const Login = () => {
                 setTimeout(() => {
                     if (res.data.user.role === 1) { // Asegúrate de que el rol sea un número
                         navigate('/admin-dashboard');
+                    } else if (res.data.user.role === 2) { // Redirigir a dashboard de admin de clínica
+                        navigate('/clinic-admin-dashboard');
                     } else {
                         navigate(from);
                     }
