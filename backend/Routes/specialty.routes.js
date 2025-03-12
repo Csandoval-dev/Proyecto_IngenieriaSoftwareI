@@ -1,6 +1,6 @@
 const express = require('express');
 const { getSpecialties, addSpecialty } = require('../controllers/specialty.controller');
-const { authenticateJWT, isClinicAdmin } = require('../middlewares/auth'); // Cambiar la ruta aquí
+const { verifyToken, isClinicAdmin } = require('../middlewares/auth');
 
 const router = express.Router();
 
@@ -8,6 +8,6 @@ const router = express.Router();
 router.get('/', getSpecialties);
 
 // Ruta para crear especialidades (solo admin de clínica)
-router.post('/', authenticateJWT, isClinicAdmin, addSpecialty);
+router.post('/', verifyToken, isClinicAdmin, addSpecialty);
 
 module.exports = router;

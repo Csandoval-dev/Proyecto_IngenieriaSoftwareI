@@ -8,7 +8,7 @@ const {
     checkDoctorBelongsToClinic,
     checkDoctorHasPendingAppointments
 } = require('../models/doctor.model');
-const db = require('./config/db');
+const db = require('../config/db'); 
 
 // Obtener la clínica asociada al administrador actual
 const getMyClinic = async (req, res) => {

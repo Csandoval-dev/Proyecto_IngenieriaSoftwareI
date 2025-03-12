@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 require('dotenv').config();
-const ADMIN_GENERAL_ROLE = 1; //Defenimos los roles de los usuarios
+const ADMIN_GENERAL_ROLE = 1; // Definimos los roles de los usuarios
 const CLINIC_ADMIN_ROLE = 2;
 
 const verifyToken = (req, res, next) => {
@@ -17,6 +17,7 @@ const verifyToken = (req, res, next) => {
         res.status(400).json({ message: 'Token inválido' });
     }
 };
+
 const isAdminGeneral = (req, res, next) => {
     if (req.user.rol !== ADMIN_GENERAL_ROLE) {
         return res.status(403).json({ message: 'Acceso restringido' });
