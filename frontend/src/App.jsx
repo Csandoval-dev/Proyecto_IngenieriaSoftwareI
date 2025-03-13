@@ -56,7 +56,6 @@ function App() {
                     <Route path="/clinic-admin-dashboard" element={<PrivateRoute component={ClinicAdminDashboard} requiredRole="2" />} />
                 </Routes>
             </div>
-        
         </Router>
     );
 }

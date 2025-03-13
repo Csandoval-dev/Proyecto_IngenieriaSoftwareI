@@ -1,11 +1,11 @@
 const express = require('express');
 const { 
-    getMyClinic, 
-    getClinicDoctors, 
+    getMyClinic,
+    getClinicDoctors,
     addDoctor,
     updateDoctorInfo,
     removeDoctorFromClinic,
-    getClinicAppointments
+    getClinicAppointments 
 } = require('../controllers/clinic-admin.controller');
 const { verifyToken, isClinicAdmin } = require('../middlewares/auth');
 

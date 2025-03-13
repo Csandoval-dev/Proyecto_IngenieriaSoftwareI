@@ -1,7 +1,7 @@
-// ClinicAdminDashboard.jsx
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { toast } from 'react-toastify';
+import styles from './ClinicAdminDashboard.module.css';
 
 const ClinicAdminDashboard = () => {
   const [clinic, setClinic] = useState(null);
@@ -10,34 +10,50 @@ const ClinicAdminDashboard = () => {
   const [specialties, setSpecialties] = useState([]);
   const [selectedDoctor, setSelectedDoctor] = useState(null);
   
-  // Estado para el formulario de nuevo/editar médico
   const [doctorForm, setDoctorForm] = useState({
     nombre: '',
     id_especialidad: '',
     horario_disponibles: ''
   });
 
-  // Obtener datos iniciales
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        console.log("Token:", localStorage.getItem('token'));
+        console.log("Rol:", localStorage.getItem('userRole'));
+        
         // Obtener información de la clínica
-        const clinicRes = await axios.get('/api/clinic-admin/my-clinic');
+        const clinicRes = await axios.get('/api/clinic-admin/my-clinic', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log("Respuesta de clínica:", clinicRes.data);
         setClinic(clinicRes.data);
         
         // Obtener médicos
-        const doctorsRes = await axios.get('/api/clinic-admin/doctors');
+        const doctorsRes = await axios.get('/api/clinic-admin/doctors', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log("Respuesta de médicos:", doctorsRes.data);
         setDoctors(doctorsRes.data);
         
         // Obtener especialidades
-        const specialtiesRes = await axios.get('/api/specialties');
+        const specialtiesRes = await axios.get('/api/specialties', {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
+        console.log("Respuesta de especialidades:", specialtiesRes.data);
         setSpecialties(specialtiesRes.data);
         
         setLoading(false);
       } catch (error) {
-        console.error('Error loading data:', error);
-        toast.error('Error al cargar los datos');
+        console.error('Error loading data:', error.response || error);
+        toast.error(error.response?.data?.message || 'Error al cargar los datos');
         setLoading(false);
       }
     };
@@ -45,7 +61,6 @@ const ClinicAdminDashboard = () => {
     fetchData();
   }, []);
   
-  // Manejar cambios en el formulario
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setDoctorForm({
@@ -54,7 +69,6 @@ const ClinicAdminDashboard = () => {
     });
   };
   
-  // Preparar formulario para editar médico
   const handleEditDoctor = (doctor) => {
     setSelectedDoctor(doctor);
     setDoctorForm({
@@ -64,7 +78,6 @@ const ClinicAdminDashboard = () => {
     });
   };
   
-  // Cancelar edición
   const handleCancelEdit = () => {
     setSelectedDoctor(null);
     setDoctorForm({
@@ -74,33 +87,35 @@ const ClinicAdminDashboard = () => {
     });
   };
   
-  // Guardar médico (nuevo o editado)
   const handleSubmitDoctor = async (e) => {
     e.preventDefault();
     try {
       let response;
       
       if (selectedDoctor) {
-        // Actualizar médico existente
-        response = await axios.put(`/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm);
+        response = await axios.put(`/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         
-        // Actualizar lista de médicos
         setDoctors(doctors.map(doc => 
           doc.id_medico === selectedDoctor.id_medico ? response.data.medico : doc
         ));
         
         toast.success('Médico actualizado exitosamente');
       } else {
-        // Agregar nuevo médico
-        response = await axios.post('/api/clinic-admin/doctors', doctorForm);
+        response = await axios.post('/api/clinic-admin/doctors', doctorForm, {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        });
         
-        // Añadir a la lista de médicos
         setDoctors([...doctors, response.data.medico]);
         
         toast.success('Médico agregado exitosamente');
       }
       
-      // Limpiar formulario y estado de edición
       handleCancelEdit();
       
     } catch (error) {
@@ -109,19 +124,20 @@ const ClinicAdminDashboard = () => {
     }
   };
   
-  // Eliminar médico
   const handleDeleteDoctor = async (id_medico) => {
     if (!window.confirm('¿Está seguro que desea eliminar este médico?')) return;
     
     try {
-      await axios.delete(`/api/clinic-admin/doctors/${id_medico}`);
+      await axios.delete(`/api/clinic-admin/doctors/${id_medico}`, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem('token')}`
+        }
+      });
       
-      // Actualizar lista de médicos
       setDoctors(doctors.filter(doc => doc.id_medico !== id_medico));
       
       toast.success('Médico eliminado exitosamente');
       
-      // Si estamos editando el médico eliminado, limpiar formulario
       if (selectedDoctor && selectedDoctor.id_medico === id_medico) {
         handleCancelEdit();
       }
@@ -131,42 +147,56 @@ const ClinicAdminDashboard = () => {
     }
   };
   
-  if (loading) return <div className="text-center mt-5">Cargando datos...</div>;
+  if (loading) return (
+    <div className={styles.loader}>
+      <div className={styles.loaderSpinner}></div>
+    </div>
+  );
   
   return (
-    <div className="container mt-4">
-      <h1 className="mb-4">Dashboard Administrador - {clinic?.nombre}</h1>
+    <div className={styles.dashboardContainer}>
+      <h1 className={styles.dashboardTitle}>Dashboard Administrador - {clinic?.nombre}</h1>
       
       <div className="row">
         <div className="col-md-4">
-          <div className="card mb-4">
-            <div className="card-header bg-primary text-white">
-              <h5 className="card-title mb-0">Información de la Clínica</h5>
+          <div className={styles.clinicInfoCard}>
+            <div className={styles.clinicInfoHeader}>
+              <h5 className="mb-0">Información de la Clínica</h5>
             </div>
-            <div className="card-body">
-              <p><strong>Nombre:</strong> {clinic?.nombre}</p>
-              <p><strong>Tipo:</strong> {clinic?.tipo}</p>
-              <p><strong>Dirección:</strong> {clinic?.direccion}</p>
-              <p><strong>Teléfono:</strong> {clinic?.telefono}</p>
-              <p><strong>Email:</strong> {clinic?.email}</p>
+            <div className={styles.clinicInfoBody}>
+              <p className={styles.clinicInfoItem}>
+                <span className={styles.clinicInfoLabel}>Nombre:</span> {clinic?.nombre}
+              </p>
+              <p className={styles.clinicInfoItem}>
+                <span className={styles.clinicInfoLabel}>Tipo:</span> {clinic?.tipo}
+              </p>
+              <p className={styles.clinicInfoItem}>
+                <span className={styles.clinicInfoLabel}>Dirección:</span> {clinic?.direccion}
+              </p>
+              <p className={styles.clinicInfoItem}>
+                <span className={styles.clinicInfoLabel}>Teléfono:</span> {clinic?.telefono}
+              </p>
+              <p className={styles.clinicInfoItem}>
+                <span className={styles.clinicInfoLabel}>Email:</span> {clinic?.email}
+              </p>
             </div>
           </div>
         </div>
         
         <div className="col-md-8">
-          <div className="card mb-4">
-            <div className="card-header bg-success text-white">
-              <h5 className="card-title mb-0">
+          <div className={styles.doctorFormCard}>
+            <div className={styles.doctorFormHeader}>
+              <h5 className="mb-0">
                 {selectedDoctor ? 'Editar Médico' : 'Agregar Médico'}
               </h5>
             </div>
-            <div className="card-body">
+            <div className={styles.doctorFormBody}>
               <form onSubmit={handleSubmitDoctor}>
-                <div className="mb-3">
-                  <label htmlFor="nombre" className="form-label">Nombre del Médico</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="nombre" className={styles.formLabel}>Nombre del Médico</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={styles.formControl}
                     id="nombre"
                     name="nombre"
                     value={doctorForm.nombre}
@@ -175,10 +205,10 @@ const ClinicAdminDashboard = () => {
                   />
                 </div>
                 
-                <div className="mb-3">
-                  <label htmlFor="id_especialidad" className="form-label">Especialidad</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="id_especialidad" className={styles.formLabel}>Especialidad</label>
                   <select
-                    className="form-control"
+                    className={styles.formControl}
                     id="id_especialidad"
                     name="id_especialidad"
                     value={doctorForm.id_especialidad}
@@ -194,11 +224,11 @@ const ClinicAdminDashboard = () => {
                   </select>
                 </div>
                 
-                <div className="mb-3">
-                  <label htmlFor="horario_disponibles" className="form-label">Horario Disponible</label>
+                <div className={styles.formGroup}>
+                  <label htmlFor="horario_disponibles" className={styles.formLabel}>Horario Disponible</label>
                   <input
                     type="text"
-                    className="form-control"
+                    className={styles.formControl}
                     id="horario_disponibles"
                     name="horario_disponibles"
                     value={doctorForm.horario_disponibles}
@@ -208,14 +238,14 @@ const ClinicAdminDashboard = () => {
                   />
                 </div>
                 
-                <div className="d-flex gap-2">
-                  <button type="submit" className="btn btn-success">
+                <div className={styles.buttonGroup}>
+                  <button type="submit" className={styles.submitButton}>
                     {selectedDoctor ? 'Actualizar Médico' : 'Agregar Médico'}
                   </button>
                   {selectedDoctor && (
                     <button 
                       type="button" 
-                      className="btn btn-secondary" 
+                      className={styles.cancelButton}
                       onClick={handleCancelEdit}
                     >
                       Cancelar
@@ -228,13 +258,13 @@ const ClinicAdminDashboard = () => {
         </div>
       </div>
       
-      <div className="card mb-4">
-        <div className="card-header bg-info">
-          <h5 className="card-title mb-0">Médicos de la Clínica</h5>
+      <div className={styles.doctorsTableCard}>
+        <div className={styles.doctorsTableHeader}>
+          <h5 className="mb-0">Médicos de la Clínica</h5>
         </div>
-        <div className="card-body">
+        <div className={styles.doctorsTableBody}>
           <div className="table-responsive">
-            <table className="table table-striped">
+            <table className={styles.doctorsTable}>
               <thead>
                 <tr>
                   <th>ID</th>
@@ -252,15 +282,15 @@ const ClinicAdminDashboard = () => {
                       <td>{doctor.nombre}</td>
                       <td>{doctor.especialidad}</td>
                       <td>{doctor.horario_disponibles}</td>
-                      <td>
+                      <td className={styles.actionButtons}>
                         <button 
-                          className="btn btn-sm btn-primary me-2"
+                          className={styles.editButton}
                           onClick={() => handleEditDoctor(doctor)}
                         >
                           Editar
                         </button>
                         <button 
-                          className="btn btn-sm btn-danger"
+                          className={styles.deleteButton}
                           onClick={() => handleDeleteDoctor(doctor.id_medico)}
                         >
                           Eliminar
@@ -270,7 +300,7 @@ const ClinicAdminDashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className="text-center">No hay médicos registrados</td>
+                    <td colSpan="5" className={styles.emptyMessage}>No hay médicos registrados</td>
                   </tr>
                 )}
               </tbody>

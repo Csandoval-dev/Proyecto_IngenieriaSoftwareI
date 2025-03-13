@@ -47,7 +47,7 @@ const findUserByEmail = async (email) => {
 
 // Función para encontrar un usuario por nombre de usuario
 const findUserByUsername = async (username) => {
-    const result = await db.query('SELECT * FROM usuario WHERE nombre = $1', [username]);
+    const result = await db.query('SELECT id_usuario, nombre, email, contrasena, id_rol, id_clinica FROM usuario WHERE nombre = $1', [username]);
     return result.rows[0];
 };
 

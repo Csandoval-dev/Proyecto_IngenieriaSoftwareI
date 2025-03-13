@@ -1,0 +1,305 @@
+/* Variables globales */
+:root {
+    --primary-color: #2c3e50;
+    --secondary-color: #27ae60;
+    --accent-color: #3498db;
+    --danger-color: #e74c3c;
+    --light-color: #ecf0f1;
+    --dark-color: #2c3e50;
+    --text-color: #333;
+    --border-radius: 8px;
+    --box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --transition: all 0.3s ease;
+  }
+  
+  /* Estilos del contenedor principal */
+  .dashboardContainer {
+    padding: 2rem;
+    background-color: #f8f9fa;
+    min-height: 100vh;
+  }
+  
+  /* Estilos del título principal */
+  .dashboardTitle {
+    color: var(--primary-color);
+    font-size: 2.2rem;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    border-bottom: 2px solid var(--secondary-color);
+    padding-bottom: 0.5rem;
+  }
+  
+  /* Estilos de la sección de información de la clínica */
+  .clinicInfoCard {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    height: 100%;
+    border: none;
+  }
+  
+  .clinicInfoCard:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+  }
+  
+  .clinicInfoHeader {
+    background-color: var(--primary-color);
+    color: white;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    padding: 1rem;
+    font-weight: 500;
+  }
+  
+  .clinicInfoBody {
+    padding: 1.5rem;
+  }
+  
+  .clinicInfoItem {
+    margin-bottom: 0.8rem;
+    padding-bottom: 0.8rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+  }
+  
+  .clinicInfoLabel {
+    font-weight: 600;
+    color: var(--dark-color);
+    margin-right: 0.5rem;
+  }
+  
+  /* Estilos de la sección de formulario de médicos */
+  .doctorFormCard {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    border: none;
+  }
+  
+  .doctorFormHeader {
+    background-color: var(--secondary-color);
+    color: white;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    padding: 1rem;
+    font-weight: 500;
+  }
+  
+  .doctorFormBody {
+    padding: 1.5rem;
+  }
+  
+  .formGroup {
+    margin-bottom: 1.2rem;
+  }
+  
+  .formLabel {
+    font-weight: 500;
+    color: var(--dark-color);
+    margin-bottom: 0.5rem;
+    display: block;
+  }
+  
+  .formControl {
+    width: 100%;
+    padding: 0.8rem;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 1rem;
+    transition: var(--transition);
+  }
+  
+  .formControl:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(39, 174, 96, 0.25);
+    outline: none;
+  }
+  
+  .buttonGroup {
+    display: flex;
+    gap: 0.8rem;
+    margin-top: 1.5rem;
+  }
+  
+  .submitButton {
+    background-color: var(--secondary-color);
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .submitButton:hover {
+    background-color: #219a52;
+  }
+  
+  .cancelButton {
+    background-color: #95a5a6;
+    color: white;
+    border: none;
+    padding: 0.7rem 1.5rem;
+    border-radius: 4px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .cancelButton:hover {
+    background-color: #7f8c8d;
+  }
+  
+  /* Estilos de la tabla de médicos */
+  .doctorsTableCard {
+    background-color: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--box-shadow);
+    transition: var(--transition);
+    margin-top: 2rem;
+    border: none;
+  }
+  
+  .doctorsTableHeader {
+    background-color: var(--accent-color);
+    color: white;
+    border-top-left-radius: var(--border-radius);
+    border-top-right-radius: var(--border-radius);
+    padding: 1rem;
+    font-weight: 500;
+  }
+  
+  .doctorsTableBody {
+    padding: 1.5rem;
+  }
+  
+  .doctorsTable {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+  }
+  
+  .doctorsTable th {
+    background-color: #f8f9fa;
+    color: var(--dark-color);
+    font-weight: 600;
+    text-align: left;
+    padding: 1rem;
+    border-bottom: 2px solid #dee2e6;
+  }
+  
+  .doctorsTable td {
+    padding: 1rem;
+    border-bottom: 1px solid #dee2e6;
+    vertical-align: middle;
+  }
+  
+  .doctorsTable tr:last-child td {
+    border-bottom: none;
+  }
+  
+  .doctorsTable tr:nth-child(even) {
+    background-color: #f8f9fa;
+  }
+  
+  .doctorsTable tr:hover {
+    background-color: rgba(52, 152, 219, 0.05);
+  }
+  
+  .emptyMessage {
+    text-align: center;
+    padding: 2rem;
+    color: #7f8c8d;
+    font-style: italic;
+  }
+  
+  /* Estilos de los botones de acción */
+  .actionButtons {
+    display: flex;
+    gap: 0.5rem;
+  }
+  
+  .editButton {
+    background-color: var(--accent-color);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .editButton:hover {
+    background-color: #2980b9;
+  }
+  
+  .deleteButton {
+    background-color: var(--danger-color);
+    color: white;
+    border: none;
+    padding: 0.4rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+  }
+  
+  .deleteButton:hover {
+    background-color: #c0392b;
+  }
+  
+  /* Estilos del loader */
+  .loader {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 50vh;
+  }
+  
+  .loaderSpinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(0, 0, 0, 0.1);
+    border-radius: 50%;
+    border-top-color: var(--secondary-color);
+    animation: spin 1s ease-in-out infinite;
+  }
+  
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+  
+  /* Estilos responsivos */
+  @media (max-width: 992px) {
+    .dashboardContainer {
+      padding: 1rem;
+    }
+  }
+  
+  @media (max-width: 768px) {
+    .doctorsTable th, 
+    .doctorsTable td {
+      padding: 0.75rem 0.5rem;
+      font-size: 0.9rem;
+    }
+    
+    .actionButtons {
+      flex-direction: column;
+      gap: 0.3rem;
+    }
+  }
+  
+  @media (max-width: 576px) {
+    .dashboardTitle {
+      font-size: 1.8rem;
+    }
+    
+    .doctorsTable {
+      display: block;
+      overflow-x: auto;
+    }
+  }
