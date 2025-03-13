@@ -23,8 +23,8 @@ const ClinicAdminDashboard = () => {
         console.log("Token:", localStorage.getItem('token'));
         console.log("Rol:", localStorage.getItem('userRole'));
         
-        // Obtener información de la clínica
-        const clinicRes = await axios.get('/api/clinic-admin/my-clinic', {
+        // Obtener información de la clínica (URL COMPLETA)
+        const clinicRes = await axios.get('http://localhost:5002/api/clinic-admin/my-clinic', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -32,8 +32,8 @@ const ClinicAdminDashboard = () => {
         console.log("Respuesta de clínica:", clinicRes.data);
         setClinic(clinicRes.data);
         
-        // Obtener médicos
-        const doctorsRes = await axios.get('/api/clinic-admin/doctors', {
+        // Obtener médicos (URL COMPLETA)
+        const doctorsRes = await axios.get('http://localhost:5002/api/clinic-admin/doctors', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -41,8 +41,8 @@ const ClinicAdminDashboard = () => {
         console.log("Respuesta de médicos:", doctorsRes.data);
         setDoctors(doctorsRes.data);
         
-        // Obtener especialidades
-        const specialtiesRes = await axios.get('/api/specialties', {
+        // Obtener especialidades (URL COMPLETA)
+        const specialtiesRes = await axios.get('http://localhost:5002/api/specialties', {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -93,7 +93,8 @@ const ClinicAdminDashboard = () => {
       let response;
       
       if (selectedDoctor) {
-        response = await axios.put(`/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm, {
+        // Actualizar médico (URL COMPLETA)
+        response = await axios.put(`http://localhost:5002/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -105,7 +106,8 @@ const ClinicAdminDashboard = () => {
         
         toast.success('Médico actualizado exitosamente');
       } else {
-        response = await axios.post('/api/clinic-admin/doctors', doctorForm, {
+        // Crear médico (URL COMPLETA)
+        response = await axios.post('http://localhost:5002/api/clinic-admin/doctors', doctorForm, {
           headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`
           }
@@ -128,7 +130,8 @@ const ClinicAdminDashboard = () => {
     if (!window.confirm('¿Está seguro que desea eliminar este médico?')) return;
     
     try {
-      await axios.delete(`/api/clinic-admin/doctors/${id_medico}`, {
+      // Eliminar médico (URL COMPLETA)
+      await axios.delete(`http://localhost:5002/api/clinic-admin/doctors/${id_medico}`, {
         headers: {
           Authorization: `Bearer ${localStorage.getItem('token')}`
         }

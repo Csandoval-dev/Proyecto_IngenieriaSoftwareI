@@ -21,10 +21,14 @@ const login = async (req, res) => {
             return res.status(401).json({ message: 'Contraseña incorrecta' });
         }
 
-        // Generar token JWT
+        // Generar token JWT (corregido)
         const token = jwt.sign(
-            { id_usuario: usuario.id_usuario, rol: usuario.id_rol.id_clinica },
-            process.env.JWT_SECRET, // Usar la clave secreta desde las variables de entorno
+            { 
+                id_usuario: usuario.id_usuario, 
+                rol: usuario.id_rol,
+                id_clinica: usuario.id_clinica 
+            },
+            process.env.JWT_SECRET,
             { expiresIn: '1h' }
         );
 
@@ -35,7 +39,8 @@ const login = async (req, res) => {
                 id: usuario.id_usuario,
                 username: usuario.nombre,
                 email: usuario.email,
-                role: usuario.id_rol
+                role: usuario.id_rol,
+                clinicId: usuario.id_clinica
             }
         });
     } catch (error) {
