@@ -4,7 +4,7 @@ const db = require('../config/db');
 const getDoctorsByClinic = async (id_clinica) => {
     const result = await db.query(`
         SELECT m.id_medico, m.nombre, e.nombre as especialidad, 
-               e.id_especialidad, m.horario_disponibles
+               e.id_especialidad, m.horario_disponible AS horario_disponibles
         FROM medico m
         JOIN especialidad e ON m.id_especialidad = e.id_especialidad
         WHERE m.id_clinica = $1
@@ -25,7 +25,7 @@ const getDoctorById = async (id_medico) => {
 
 const createDoctor = async (nombre, id_especialidad, id_clinica, horario_disponibles) => {
     const result = await db.query(`
-        INSERT INTO medico (nombre, id_especialidad, id_clinica, horario_disponibles)
+        INSERT INTO medico (nombre, id_especialidad, id_clinica, horario_disponible)
         VALUES ($1, $2, $3, $4)
         RETURNING *
     `, [nombre, id_especialidad, id_clinica, horario_disponibles]);
@@ -35,7 +35,7 @@ const createDoctor = async (nombre, id_especialidad, id_clinica, horario_disponi
 const updateDoctor = async (id_medico, nombre, id_especialidad, horario_disponibles) => {
     const result = await db.query(`
         UPDATE medico 
-        SET nombre = $1, id_especialidad = $2, horario_disponibles = $3
+        SET nombre = $1, id_especialidad = $2, horario_disponible = $3
         WHERE id_medico = $4
         RETURNING *
     `, [nombre, id_especialidad, horario_disponibles, id_medico]);

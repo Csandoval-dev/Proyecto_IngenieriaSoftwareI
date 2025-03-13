@@ -10,7 +10,7 @@ const getSpecialties = async (req, res) => {
     }
 };
 
-// Crear una nueva especialidad
+// Crear una nueva especialidad (solo para uso administrativo avanzado)
 const addSpecialty = async (req, res) => {
     const { nombre } = req.body;
 

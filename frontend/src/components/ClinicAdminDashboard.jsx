@@ -89,72 +89,115 @@ const ClinicAdminDashboard = () => {
   
   const handleSubmitDoctor = async (e) => {
     e.preventDefault();
+    
+    // Validación básica
+    if (!doctorForm.nombre.trim()) {
+      toast.error('El nombre del médico es obligatorio');
+      return;
+    }
+    
+    if (!doctorForm.id_especialidad) {
+      toast.error('Debe seleccionar una especialidad');
+      return;
+    }
+    
+    if (!doctorForm.horario_disponibles.trim()) {
+      toast.error('El horario es obligatorio');
+      return;
+    }
+    
     try {
+      setLoading(true); // Mostrar indicador de carga
+      
       let response;
       
       if (selectedDoctor) {
         // Actualizar médico (URL COMPLETA)
-        response = await axios.put(`http://localhost:5002/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, doctorForm, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        response = await axios.put(
+          `http://localhost:5002/api/clinic-admin/doctors/${selectedDoctor.id_medico}`, 
+          doctorForm, 
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        );
         
+        // Actualizar la lista de médicos localmente para reflejar los cambios inmediatamente
         setDoctors(doctors.map(doc => 
-          doc.id_medico === selectedDoctor.id_medico ? response.data.medico : doc
+          doc.id_medico === selectedDoctor.id_medico 
+            ? {...response.data.medico, especialidad: specialties.find(s => 
+                s.id_especialidad === Number(response.data.medico.id_especialidad))?.nombre} 
+            : doc
         ));
         
         toast.success('Médico actualizado exitosamente');
       } else {
         // Crear médico (URL COMPLETA)
-        response = await axios.post('http://localhost:5002/api/clinic-admin/doctors', doctorForm, {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem('token')}`
-          }
-        });
+        response = await axios.post(
+          'http://localhost:5002/api/clinic-admin/doctors', 
+          doctorForm, 
+          { headers: { Authorization: `Bearer ${localStorage.getItem('token')}` } }
+        );
         
-        setDoctors([...doctors, response.data.medico]);
+        // Obtener el nombre de la especialidad para mostrar en la tabla
+        const especialidad = specialties.find(s => 
+          s.id_especialidad === Number(response.data.medico.id_especialidad))?.nombre;
+        
+        // Añadir el nuevo médico a la lista
+        setDoctors([...doctors, {...response.data.medico, especialidad}]);
         
         toast.success('Médico agregado exitosamente');
       }
       
+      // Limpiar el formulario después de guardar
       handleCancelEdit();
       
     } catch (error) {
-      console.error('Error saving doctor:', error);
+      console.error('Error saving doctor:', error.response || error);
       toast.error(error.response?.data?.message || 'Error al guardar médico');
+    } finally {
+      setLoading(false);
     }
   };
-  
+
   const handleDeleteDoctor = async (id_medico) => {
     if (!window.confirm('¿Está seguro que desea eliminar este médico?')) return;
     
     try {
+      setLoading(true);
+      
       // Eliminar médico (URL COMPLETA)
       await axios.delete(`http://localhost:5002/api/clinic-admin/doctors/${id_medico}`, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem('token')}`
-        }
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
       });
       
+      // Actualizar la lista de médicos eliminando el médico borrado
       setDoctors(doctors.filter(doc => doc.id_medico !== id_medico));
       
       toast.success('Médico eliminado exitosamente');
       
+      // Si estábamos editando ese médico, limpiar el formulario
       if (selectedDoctor && selectedDoctor.id_medico === id_medico) {
         handleCancelEdit();
       }
     } catch (error) {
-      console.error('Error deleting doctor:', error);
-      toast.error(error.response?.data?.message || 'Error al eliminar médico');
+      console.error('Error deleting doctor:', error.response || error);
+      
+      // Mensajes de error más específicos
+      if (error.response?.status === 400) {
+        toast.error('No se puede eliminar el médico porque tiene citas pendientes');
+      } else {
+        toast.error(error.response?.data?.message || 'Error al eliminar médico');
+      }
+    } finally {
+      setLoading(false);
     }
   };
-  
-  if (loading) return (
-    <div className={styles.loader}>
-      <div className={styles.loaderSpinner}></div>
-    </div>
-  );
+
+  if (loading) {
+    return (
+      <div className={styles.loader}>
+        <div className={styles.loaderSpinner}></div>
+      </div>
+    );
+  }
   
   return (
     <div className={styles.dashboardContainer}>

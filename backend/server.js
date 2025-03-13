@@ -18,6 +18,14 @@ app.use('/api/clinics', clinicRoutes); // Usa clinic routes
 app.use('/api/specialties', specialtyRoutes); // Usa specialty routes
 app.use('/api/clinic-admin', clinicAdminRoutes); // Usa clinic-admin routes
 
+
+const { ensureDefaultSpecialties } = require('./models/specialty.model');
+
+// Aseguraramos que las especialidades predefinidas existen al iniciar el servidor
+ensureDefaultSpecialties().then(() => {
+    console.log('✅ Especialidades predefinidas verificadas');
+});
+
 const PORT = process.env.PORT || 5002; // Puerto
 app.listen(PORT, () => {
     console.log(`✅ Server running at http://localhost:${PORT}`);
