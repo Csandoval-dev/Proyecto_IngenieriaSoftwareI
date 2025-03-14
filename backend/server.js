@@ -11,8 +11,8 @@ require('dotenv').config(); // Cargar variables de entorno
 const app = express();
 app.use(cors()); // Enable CORS
 app.use(express.json());
-const chatbotRoutes = require('./routes/chatbotRoutes');
-app.use('/api/chatbot', chatbotRoutes);
+const chatbotRoutes = require('./routes/chatbotRoutes'); // Ensure this file exists
+app.use('/api/chatbot', chatbotRoutes); // Ensure this route is correctly defined
 app.use('/api/auth', authRoutes); // Usa authentication routes
 app.use('/api/admin', adminRoutes); // Usa admin routes
 app.use('/api/clinics', clinicRoutes); // Usa clinic routes
