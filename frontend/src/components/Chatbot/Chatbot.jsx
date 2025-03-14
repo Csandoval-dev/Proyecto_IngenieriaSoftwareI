@@ -43,52 +43,63 @@ const Chatbot = () => {
   }, [isOpen, messages.length]);
 
   // Manejar envío de mensajes
-  const handleSendMessage = async (message) => {
-    if (!message.trim() || isLoading) return;
+ // Modificar la función handleSendMessage
+const handleSendMessage = async (message) => {
+  if (!message.trim() || isLoading) return;
+  
+  // Agregar mensaje del usuario
+  const userMessage = {
+    id: Date.now(),
+    text: message,
+    isBot: false
+  };
+  
+  setMessages(prev => [...prev, userMessage]);
+  setIsLoading(true);
+  
+  try {
+    // Detectar intención
+    const userIntent = detectUserIntent(message);
     
-    // Agregar mensaje del usuario
-    const userMessage = {
-      id: Date.now(),
-      text: message,
-      isBot: false
-    };
-    
-    setMessages(prev => [...prev, userMessage]);
-    setIsLoading(true);
-    
-    try {
-      // Detectar intención
-      const userIntent = detectUserIntent(message);
-      
-      // Obtener respuesta de OpenAI
-      const botResponse = await getAIResponse(
-        messages.map(msg => ({
+    // Llamar al backend en lugar de OpenAI directamente
+    const response = await fetch('http://localhost:5002/api/chatbot/message', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        messageHistory: messages.map(msg => ({
           role: msg.isBot ? 'assistant' : 'user',
           content: msg.text
         })),
-        message,
-        chatbotData,
-        userIntent
-      );
-      
-      // Agregar respuesta del bot
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        text: botResponse,
-        isBot: true
-      }]);
-    } catch (error) {
-      console.error("Error:", error);
-      setMessages(prev => [...prev, {
-        id: Date.now(),
-        text: "Lo siento, estoy teniendo problemas para responder. Por favor, intenta de nuevo.",
-        isBot: true
-      }]);
-    } finally {
-      setIsLoading(false);
+        newMessage: message,
+        intent: userIntent
+      })
+    });
+    
+    if (!response.ok) {
+      throw new Error('Error en la respuesta del servidor');
     }
-  };
-
+    
+    const data = await response.json();
+    
+    // Agregar respuesta del bot
+    setMessages(prev => [...prev, {
+      id: Date.now(),
+      text: data.message,
+      isBot: true
+    }]);
+  } catch (error) {
+    console.error("Error:", error);
+    setMessages(prev => [...prev, {
+      id: Date.now(),
+      text: "Lo siento, estoy teniendo problemas para responder. Por favor, intenta de nuevo.",
+      isBot: true
+    }]);
+  } finally {
+    setIsLoading(false);
+  }
+};
   // Toggle chat abierto/cerrado
   const toggleChat = () => {
     setIsOpen(prev => !prev);

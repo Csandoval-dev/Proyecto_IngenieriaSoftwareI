@@ -1,7 +1,7 @@
 import { buildSystemPrompt } from '../utils/promptBuilder';
 
 export const getAIResponse = async (messageHistory, newMessage, chatbotData, intent) => {
-  const apiKey = process.env.REACT_APP_OPENAI_API_KEY;
+const apiKey = window.ENV?.REACT_APP_OPENAI_API_KEY || process.env.REACT_APP_OPENAI_API_KEY;
   if (!apiKey) {
     throw new Error("API key no configurada");
   }

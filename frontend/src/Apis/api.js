@@ -11,7 +11,7 @@ export const fetchChatbotData = async () => {
       // Datos de horarios generales
       const schedule = {
         general: "Lunes a Viernes de 8:00 AM a 6:00 PM, Sábados de 8:00 AM a 1:00 PM",
-        duracionCita: "30 minutos en promedio"
+        duracionCita: "40 minutos en promedio"
       };
       
       return {

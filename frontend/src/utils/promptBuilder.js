@@ -11,7 +11,7 @@ export const buildSystemPrompt = (data, intent) => {
   
   HORARIOS DE ATENCIÓN:
   ${horarios.general || "Lunes a Viernes de 8:00 AM a 6:00 PM"}
-  - Duración promedio de citas: ${horarios.duracionCita || "30 minutos"}
+  - Duración promedio de citas: ${horarios.duracionCita || "40 minutos"}
   
   INSTRUCCIONES:
   1. Responde amablemente preguntas sobre Health Connect.
