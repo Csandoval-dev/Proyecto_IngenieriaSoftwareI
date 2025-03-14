@@ -313,7 +313,7 @@ const ClinicAdminDashboard = () => {
             <table className={styles.doctorsTable}>
               <thead>
                 <tr>
-                  <th>ID</th>
+                  {/* Eliminada la columna de ID */}
                   <th>Nombre</th>
                   <th>Especialidad</th>
                   <th>Horario</th>
@@ -324,7 +324,7 @@ const ClinicAdminDashboard = () => {
                 {doctors.length > 0 ? (
                   doctors.map(doctor => (
                     <tr key={doctor.id_medico}>
-                      <td>{doctor.id_medico}</td>
+                      {/* Eliminada la celda de ID */}
                       <td>{doctor.nombre}</td>
                       <td>{doctor.especialidad}</td>
                       <td>{doctor.horario_disponibles}</td>
@@ -346,7 +346,7 @@ const ClinicAdminDashboard = () => {
                   ))
                 ) : (
                   <tr>
-                    <td colSpan="5" className={styles.emptyMessage}>No hay médicos registrados</td>
+                    <td colSpan="4" className={styles.emptyMessage}>No hay médicos registrados</td>
                   </tr>
                 )}
               </tbody>
